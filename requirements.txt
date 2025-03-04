@@ -1,0 +1,7 @@
+Django>=3.2,<4.0
+djangorestframework
+gunicorn
+firebirdsql
+celery
+redis
+django-cors-headers
