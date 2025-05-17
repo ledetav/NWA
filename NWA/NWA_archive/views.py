@@ -1,7 +1,8 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 
 def index(request):
-    return HttpResponse("Главная страница")
+    return render(request, 'index.html')
 
 def log(request):
-    return HttpResponse("Лог")
+    return render(request, 'log.html')
