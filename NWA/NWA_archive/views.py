@@ -10,3 +10,6 @@ def log_page_view(request):
 
 def test_page_view(request):
     return render(request, 'test.html')
+
+def modal_window(request):
+    return render(request, 'modal_window.html')
