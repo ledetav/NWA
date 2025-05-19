@@ -1,0 +1,20 @@
+// Миксин для неоморфического эффекта (выпуклый)
+@mixin neumorphic-convex($distance: 8px, $blur: 16px, $border-radius: $border-radius-large) {
+    background-color: $bg-color;
+    border-radius: $border-radius;
+    box-shadow:
+      #{$distance} #{$distance} #{$blur} $dark-shadow-color,
+      -#{$distance} -#{$distance} #{$blur} $light-shadow-color;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  // Миксин для неоморфического эффекта (вдавленный)
+  @mixin neumorphic-concave($distance: 6px, $blur: 12px, $border-radius: $border-radius-large) {
+    background-color: $bg-color; // Можно сделать чуть темнее $bg-color для лучшего эффекта
+    border-radius: $border-radius;
+    box-shadow:
+      inset #{$distance} #{$distance} #{$blur} $dark-shadow-color,
+      inset -#{$distance} -#{$distance} #{$blur} $light-shadow-color;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
