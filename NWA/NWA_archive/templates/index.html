@@ -28,7 +28,12 @@
             </div>
             <div class="rows-container item2">
                 <!-- контейнер для строк -->
-                <label>Ответственные</label>
+                <label class="label">Ответственные</label>
+                Имя: {{name}} 
+                <!-- нужно имя ответственного -->
+                 Ответственный {% if moderators.id == northernwarmers.id %}
+                 {{moderators_position}}
+                 {% endif %}
             </div>
         </div>
 </body>
