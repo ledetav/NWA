@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("NWA_archive.urls")),
     path('', views.index),
-    path('log', views.log),
+    path('log/', views.log),
 ]

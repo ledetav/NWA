@@ -2,7 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 def index(request):
-    return render(request, 'index.html')
+    data = { 'здесь будут переменные'} #как передавать переменные: "<название переменное>": <переменная>
+    return render(request, 'index.html', context=data)
 
 def log(request):
     return render(request, 'log.html')
