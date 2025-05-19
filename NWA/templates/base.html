@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Архив Дарителей тепла{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><a href="/log">Лог работ</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div>
+            Этот проект спонсирован господином Тартальей на здоровые нервы. Поблагодарим Предвестника Её Величества за службу!
+            <img href="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78">
+        </div>
+    </main>
+    <footer>
+        <p>©{% now "Y" %} Горемычный Смехотворец [1546471] и Пламенеющая [1615439]. Все права защищены.</p>
+    </footer>
+</body>
+</html>
