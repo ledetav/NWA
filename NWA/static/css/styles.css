@@ -7,9 +7,9 @@
 .main-container {
   display: grid;
   grid-template-columns: 1fr;
-  grid-auto-flow: row;
+  grid-auto-flow: column;
   gap: 20px;
-  justify-content: center;
+  background-color: blue;
 }
 
 .columns-container {
@@ -18,7 +18,6 @@
     grid-template-rows: auto;
     grid-auto-flow: column;
     gap: 20px;
-    justify-self: center;
     grid-template-areas: 
     "row-1 row-2";
 }
@@ -27,10 +26,8 @@
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto auto;
-    grid-auto-flow: column;
-    justify-self: center;
-    gap: 20px;
-    
+
+    gap: 20px;    
 }
 
 .item1 {
@@ -43,4 +40,23 @@
 
 label {
     text-align: center;
+}
+/* основной контейнер, содержащий две колонки: одну для самого календаря, другую для перелистывания месяцев */
+.main-calendar-container {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+/* сам календарь */
+.calendar-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-gap: 10px;
+}
+
+.birthday-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+    grid-auto-flow: row;
 }

@@ -4,7 +4,7 @@
 <head>
     <title>Главная страница</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
 </head>
 <body>
     <div class="main-container">
@@ -14,10 +14,17 @@
             <div class="rows-container">
                 <!-- контейнер для строк -->
                 <label>Ближайшие именинники</label>
+                <div class="birthday-container">
+                    <!-- сюда форму для выведения именинников. 4 штуки в строку.  -->
+                </div>
             </div>
-            <div class="rows-container">
+            <div class="rows-container main-calendar-container">
                 <!-- контейнер для строк -->
                 <label>Календарь</label>
+                <div class="calendar-container">
+                    <!-- сюда форму для создания календаря -->
+                    Календарик
+                </div>
             </div>
         </div>
         <div class="columns-container">
@@ -25,15 +32,16 @@
             <div class="rows-container item1">
                 <!-- контейнер для строк -->
                 <label>Статистика</label>
+                <table>
+                    <td>{{ sum_blogs }}</td>
+                    
+                </table>
             </div>
             <div class="rows-container item2">
                 <!-- контейнер для строк -->
-                <label class="label">Ответственные</label>
-                Имя: {{name}} 
-                <!-- нужно имя ответственного -->
-                 Ответственный {% if moderators.id == northernwarmers.id %}
-                 {{moderators_position}}
-                 {% endif %}
+                <label>Ответственные</label>
+                <label>Имя: </label>  <!-- нужно имя ответственного -->
+                <label>Ответственный </label>
             </div>
         </div>
 </body>
