@@ -11,25 +11,37 @@
         <!-- основной контейнер -->
         <div class="columns-container">
             <!-- контейнер для колонок -->
-            <div class="rows-container">
+            <div class="rows-container main-calendar-container item3">
+                <!-- контейнер для строк -->
+                <label>Календарь</label>
+                <div class="calendar">
+                    <div class="header">
+                        <button id="Btn-back">&lt;</button>
+                        <h2 id="monthYear">Месяц Год</h2>
+                        <button id="Btn-next">&gt;</button>
+                    </div>
+                    <div class="weekdays">
+                        <div>Пн</div>
+                        <div>Вт</div>
+                        <div>Ср</div>
+                        <div>Чт</div>
+                        <div>Пт</div>
+                        <div>Сб</div>
+                        <div>Вс</div>
+                    </div>
+                    <div class="days">
+                        <!-- Дни вместе с именинниками будут генерироваться здесь -->
+                    </div>
+                </div>
+            </div>
+            <div class="rows-container item1">
                 <!-- контейнер для строк -->
                 <label>Ближайшие именинники</label>
                 <div class="birthday-container">
                     <!-- сюда форму для выведения именинников. 4 штуки в строку.  -->
                 </div>
             </div>
-            <div class="rows-container main-calendar-container">
-                <!-- контейнер для строк -->
-                <label>Календарь</label>
-                <div class="calendar-container">
-                    <!-- сюда форму для создания календаря -->
-                    Календарик
-                </div>
-            </div>
-        </div>
-        <div class="columns-container">
-            <!-- контейнер для колонок -->
-            <div class="rows-container item1">
+            <div class="rows-container item2">
                 <!-- контейнер для строк -->
                 <label>Статистика</label>
                 <table>
@@ -37,7 +49,7 @@
                     
                 </table>
             </div>
-            <div class="rows-container item2">
+            <div class="rows-container item4">
                 <!-- контейнер для строк -->
                 <label>Ответственные</label>
                 <label>Имя: </label>  <!-- нужно имя ответственного -->
