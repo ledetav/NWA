@@ -164,3 +164,20 @@ label {
   .item10 {
     grid-area: content;
   }
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+th, td {
+    padding: 4px; 
+    word-wrap: break-word;
+    text-align: center;
+    width: 1fr;
+
+}
+
+.w-100 {
+    width: 100%;
+}

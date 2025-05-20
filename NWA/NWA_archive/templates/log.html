@@ -1,45 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Лог Дарителей Тепла</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
 </head>
 <body>
     <div class="main-container">
-        <label>Фильтры и Сортировка</label>
-        <div class="filter">
-            <div class="item9">Поиск по названию блога</div>
-            <div class="item10">Сюда надо впихнуть ввод с клавы</div>
-            <div class="item9">Сортировка по дате</div>
-            <div class="item10">Выпадающий список от раннего до позднего и от позднего до раннего</div>
-            <div class="item9">Поиск по имениннику</div>
-            <div class="item10">либо выбор именинника, либо человек сам вводит имя с клавиатуры</div>
-        </div>
-        <div>
+        
+        <div class="w-100">
         <table>
             <thead>
                 <tr>
-                    <th>Название блога</div></th>
-                    <th>Принимали участие</th>
-                    <th>Дата</th>
                     <th>Именинник</th>
-                    <th>Об имениннике</th>
+                    <th>Дата</th>
+                    <th>Тип работы</th>
+                    <th>Даритель</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- {% for blog in blogs %} -->
+                <!-- for цикл для того, чтобы проверять, если есть именинник с работой - добавляет. Скорее всего лучше делать по id работы, но не уверена  -->
                 <tr>
-                    <td>Боже дай сил</td>
-                    <td>Олологрив</td>
-                    <td>05.02.95</td>
-                    <td>Кто-то</td>
-                    <td><a href="/">Посмотреть</a></td>
+                    <td>Имечко красивое</td>
+                    <td>14.05.2024</td>
+                    <td>текст</td>
+                    <td>Пельмень обыкновенный</td>
                 </tr>
-                <!-- {% endfor %} -->
+                <!-- конец for -->
             </tbody>
         </table>
-        </div>
+    </div>
     </div>
 </body>
 </html>
