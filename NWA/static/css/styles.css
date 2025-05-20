@@ -146,16 +146,21 @@ label {
 }
 
 /* Стили для Лога */
- table {
+  .filter {
     display: grid;
-    grid-template-columns: 2fr 2fr 1fr 1fr; /* Три колонки одинаковой ширины */
-    border-collapse: collapse; /* Убираем двойные границы */
-    width: 300px;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-auto-flow: row;
+    gap: 20px;
+    grid-template-areas:
+    "header header header"
+    "content content content"
   }
 
-  tr, td, th {
-    border: 1px solid #ccc;
-    padding: 5px;
-    text-align: center;
-    width: 300px;
+  .item9 {
+    grid-area: header;
+  }
+
+  .item10 {
+    grid-area: content;
   }
