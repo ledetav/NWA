@@ -6,11 +6,12 @@
 
 .main-container {
   display: grid;
-  grid-template-rows: 1fr;
+  grid-template-rows: auto auto;
   grid-auto-flow: row;
-  gap: 20px;
+  text-align: center;
 }
 
+/* Стили для Главной страницы */
 .columns-container {
     display: grid;
     grid-template-columns: auto;
@@ -143,3 +144,5 @@ label {
 .item8 {
     grid-area: row-8;
 }
+
+/* Стили для Лога */
