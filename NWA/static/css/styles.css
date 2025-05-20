@@ -146,3 +146,16 @@ label {
 }
 
 /* Стили для Лога */
+ table {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr; /* Три колонки одинаковой ширины */
+    border-collapse: collapse; /* Убираем двойные границы */
+    width: 300px;
+  }
+
+  tr, td, th {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: center;
+    width: 300px;
+  }
