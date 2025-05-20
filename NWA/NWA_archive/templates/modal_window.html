@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block modal_block %}
+<div id="neumorphicModal" class="modal-overlay">
+    <div class="modal-content neumorphic-modal-window">
+        <span class="modal-close-button">×</span>
+        <h3>Неоморфическое модальное окно</h3>
+        <p>Они мне надоели :(</p>
+        <img src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_5.png?a3d01a4a5c5f97a1d0e72b110c5cfa78" alt="Пример изображения" style="max-width: 100%; border-radius: 10px; margin-top:15px;">
+        <div style="text-align: right; margin-top: 20px;">
+            <button class="neumorphic-button modal-action-button">ОК</button>
+            <button class="neumorphic-button modal-close-button-alt">Помучить еще..</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('neumorphicModal');
+        const openModalBtn = document.getElementById('openNeumorphicModalBtn');
+        const closeButtons = document.querySelectorAll('.modal-close-button, .modal-close-button-alt'); // Все кнопки закрытия
+
+        // Функция открытия модального окна
+        function openModal() {
+            if (modal) {
+                modal.style.display = 'flex';
+                setTimeout(() => { // Даем время для display:flex примениться перед анимацией
+                    modal.classList.add('open');
+                }, 10);
+            }
+        }
+
+        // Функция закрытия модального окна
+        function closeModal() {
+            if (modal) {
+                modal.classList.remove('open');
+                // Ждем завершения анимации перед скрытием
+                modal.addEventListener('transitionend', function handler() {
+                    modal.style.display = 'none';
+                    modal.removeEventListener('transitionend', handler); // Удаляем слушатель
+                });
+            }
+        }
+
+        // Открыть модальное окно по клику на кнопку
+        if (openModalBtn) {
+            openModalBtn.addEventListener('click', openModal);
+        }
+
+        // Закрыть модальное окно по клику на кнопки закрытия
+        closeButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+
+        // Закрыть модальное окно по клику на оверлей
+        if (modal) {
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal) { // Клик был по оверлею, а не по содержимому
+                    closeModal();
+                }
+            });
+        }
+
+        // Закрыть модальное окно по нажатию Escape
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape" && modal && modal.classList.contains('open')) {
+                closeModal();
+            }
+        });
+
+        // Пример действия для кнопки "ОК" в модалке
+        const modalOkButton = document.querySelector('.modal-action-button');
+        if (modalOkButton) {
+            modalOkButton.addEventListener('click', function () {
+                alert('Нажата кнопка "ОК" в модальном окне!');
+                closeModal(); // Закрываем модалку после действия
+            });
+        }
+    });
+</script>
+{% endblock %}

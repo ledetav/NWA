@@ -22,8 +22,8 @@
 
         <main class="content-area">
             <div class="neumorphic-window">
-                {% block content %}
-                {% endblock %}
+                {% block page_content %}
+                {% endblock page_content %}
             </div>
         </main>
 
@@ -31,5 +31,11 @@
             <p>©{% now "Y" %} Горемычный Смехотворец [1546471] и Пламенеющая [1615439]. Все права защищены.</p>
         </footer>
     </div>
+
+    {% block modal_block %}
+    {% endblock modal_block %}
+
+    {% block scripts_block %}
+    {% endblock scripts_block %}
 </body>
 </html>
