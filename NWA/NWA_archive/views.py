@@ -9,17 +9,18 @@ def main_page_view(request):
     text_count = NWAArchiveTexts.objects.count()  # Получаем количество строк
     code_count = NWAArchiveCodes.objects.count()  # Получаем количество строк
     moderator_id = request.GET.get('moderator_id')  # Получаем id модератора из GET-параметра
-    
-    if moderator_id:
-        # Используем get_object_or_404 для получения модератора или 404 ошибки
-        moderator = get_object_or_404(Moderators, pk=moderator_id)
-        name = moderator.nw_ID.nw_name
+    try:
+        moderator = Moderators.objects.get(pk=moderator_id) #Получаем модератора по id
+        name = moderator.nw_ID.nw_name # получаем nw_name
+        #Получаем один экземпляр NorthernWarmers
+    except Moderators.DoesNotExist:
+        name = None #Если не находим, то присваиваем значение None
+
+    try:
+        moderator = Moderators.objects.get(pk=moderator_id)
         position = moderator.moderator_position
-    else:
-        moderator_id = 1
-        moderator = Moderators.objects.first()
-        name = moderator.nw_ID.nw_name
-        position = moderator.moderator_position
+    except Moderators.DoesNotExist:
+        position = None
 
     context = {
         'blog_count': blog_count,
