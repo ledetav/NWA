@@ -1,27 +1,21 @@
 .index-page {
     &__grid {
         display: grid;
-        grid-template-columns: 3fr 2fr;
+        grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr); 
         grid-template-rows: auto auto;
         gap: 25px;
-
-        // Определяем области для наших секций
         grid-template-areas:
-            "birthdays      statistics"  // Первая строка: слева Статистика, справа Именинники
-            "calendar      moderators"; // Вторая строка: слева Ответственные, справа Календарь
+            "birthdays   statistics"
+            "calendar    moderators";
 
-        // Адаптация для мобильных устройств (одна колонка)
-        @media (max-width: 991px) { // Пороговое значение можно настроить
-            grid-template-columns: 1fr; // Одна колонка
-            grid-template-rows: auto auto auto auto; // Четыре строки
-            grid-template-areas:      // Переопределяем области для одной колонки
-                "birthdays"         // Ближайшие именинники
-                "calendar"          // Календарь
-                "statistics"        // Статистика
-                "moderators";       // Ответственные
-        }
-        @media (max-width: 767px) { // Еще более мелкие экраны, если нужен другой порядок или настройки
-             // Можно оставить как есть или дополнительно настроить
+        @media (max-width: 991px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto auto;
+            grid-template-areas:
+                "birthdays"
+                "calendar"
+                "statistics"
+                "moderators";
         }
     }
 
@@ -34,181 +28,278 @@
         flex-direction: column;
         gap: 15px;
 
-        &--statistics {
+        &--upcoming-birthdays { grid-area: birthdays; }
+        &--statistics { 
             grid-area: statistics;
+            text-align: center; 
         }
-        &--upcoming-birthdays {
-            grid-area: birthdays;
-        }
-        &--moderators {
-            grid-area: moderators;
-        }
-        &--calendar {
+        &--calendar { 
             grid-area: calendar;
+             // Убедимся, что календарь растягивается по высоте, если нужно
+            display: flex; // Чтобы .calendar внутри мог расти
+            flex-direction: column;
         }
+        &--moderators { grid-area: moderators; }
     }
 
     &__section-title {
         text-align: center;
-        font-size: 1.3em;
+        font-size: 1.2em; 
         font-weight: 600;
-        color: darken($text-color, 10%);
-        margin-bottom: 10px;
+        color: darken($text-color, 15%);
+        margin-bottom: 15px;
+        border-bottom: 1px solid darken($bg-color, 10%);
+        padding-bottom: 10px;
     }
 
-    // Календарь
-    .calendar {
+    // --- Ближайшие именинники (стилизация под круги) ---
+    .upcoming-birthdays {
+        &__list {
+            display: grid;
+            // Адаптивное количество колонок для именинников
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        &__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        &__date {
+            font-size: 0.9em;
+            color: lighten($text-color, 10%);
+            background-color: darken($bg-color, 5%);
+            padding: 2px 6px;
+            border-radius: $border-radius-small;
+        }
+        &__avatar { // "Круг" с котиком или другим аватаром
+            width: 90px;  // Размер круга
+            height: 90px;
+            background-color: $dark-shadow-color; // Цвет фона аватара
+            border-radius: 50%; // Делаем круглым
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            // Если будете использовать <img> внутри:
+            // img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+            // Пока просто иконка или текст:
+            font-size: 2.5em; // Размер для иконки-плейсхолдера
+            color: $bg-color;
+            overflow: hidden; // Если картинка будет больше
+        }
+        &__name {
+            font-weight: 500;
+        }
+    }
+
+    // --- Статистика (стилизация под макет) ---
+    .statistics-details { // Новый контейнер для элементов статистики
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        &__total-blogs {
+            font-size: 3.5em; // Большой размер для числа блогов
+            font-weight: bold;
+            color: $link-color; // Или другой акцентный цвет
+            line-height: 1;
+        }
+        &__total-blogs-label {
+            font-size: 1.1em;
+            color: darken($text-color, 10%);
+            margin-top: -10px; // Чтобы подпись была ближе к числу
+            margin-bottom: 10px;
+        }
+        &__breakdown-title {
+            font-size: 0.9em;
+            color: lighten($text-color, 5%);
+            font-weight: 500;
+        }
+        &__breakdown-item {
+            font-size: 1.2em; // Размер для строк "568 рисунков"
+            color: $text-color;
+            span { // Число внутри элемента
+                font-weight: 600;
+            }
+        }
+    }
+
+
+    .calendar { // Основной контейнер календаря
         display: flex;
         flex-direction: column;
         width: 100%;
         flex-grow: 1; // Позволяет календарю занять доступное пространство в секции
 
-        .header {
+        &__header { // Заголовок календаря (Месяц Год и кнопки)
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 8px 0; // Отступы сверху/снизу
+            margin-bottom: 10px; // Отступ от дней недели
 
             button {
                 background: none;
                 border: none;
                 cursor: pointer;
-                font-size: 1.6em;
+                font-size: 1.8em; // Размер стрелок
                 color: $text-color;
                 padding: 5px 10px;
                 border-radius: $border-radius-small;
+                line-height: 1; // Для лучшего вертикального выравнивания
                 &:hover {
                     color: $link-color;
                     background-color: darken($bg-color, 5%);
                 }
             }
-            h2 {
-                font-size: 1.2em;
+            h3 { // Отображение месяца и года (или h2)
+                font-size: 1.3em;
                 margin: 0;
                 font-weight: 500;
+                text-align: center;
+                flex-grow: 1; // Позволяет тексту занять доступное пространство между кнопками
             }
         }
 
-        .weekdays {
+        &__weekdays {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
             font-weight: bold;
-            padding: 8px 0;
+            font-size: 0.9em;
+            padding-bottom: 8px;
             border-bottom: 1px solid darken($bg-color, 10%);
             div {
                 padding: 5px;
             }
         }
 
-        .days {
+        &__days {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            grid-gap: 3px;
-            padding: 8px 0;
-            flex-grow: 1; // Позволяет блоку дней растягиваться, если нужно
+            grid-auto-rows: minmax(50px, auto); // Авто высота строк, минимум 50px
+            grid-gap: 4px; // Промежуток между днями
+            padding-top: 10px;
+            flex-grow: 1; // Позволяет блоку дней растягиваться
             div {
                 text-align: center;
-                padding: 10px 5px;
+                padding: 8px 5px; // Паддинги внутри ячейки дня
                 cursor: pointer;
                 border: 1px solid transparent;
                 border-radius: $border-radius-small;
-                min-height: 40px; // Немного увеличим высоту ячейки дня
+                min-height: 40px; // Минимальная высота ячейки дня (можно удалить, если grid-auto-rows достаточно)
                 display: flex;
+                flex-direction: column; // Для точки внизу
                 align-items: center;
-                justify-content: center;
+                justify-content: center; // Центрируем число дня
+                position: relative;
+
                 &:hover {
                     background-color: darken($bg-color, 5%);
                     border-color: darken($bg-color, 15%);
                 }
                 &.has-birthday {
-                    background-color: lighten($link-color, 40%);
                     font-weight: bold;
-                    border: 1px solid $link-color;
+                    // Можно оставить точку или сделать другой индикатор
+                    &::after { 
+                        content: '';
+                        display: block;
+                        width: 6px;
+                        height: 6px;
+                        background-color: #e74c3c; 
+                        border-radius: 50%;
+                        position: absolute;
+                        bottom: 6px; 
+                        left: 50%;
+                        transform: translateX(-50%);
+                    }
                 }
-                &.today { // Стиль для сегодняшнего дня
-                    background-color: lighten($link-hover-color, 35%);
+                &.today {
+                    background-color: lighten($link-hover-color, 40%);
                     border: 1px solid $link-hover-color;
+                    font-weight: bold;
                 }
-                &.empty { // Для пустых ячеек
+                &.empty {
                     background-color: transparent;
                     cursor: default;
+                    &:hover {
+                        background-color: transparent;
+                        border-color: transparent;
+                    }
                 }
             }
         }
     }
 
-    // Ближайшие именинники
-    .upcoming-birthdays {
-        &__list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        &__item {
-            padding: 12px;
-            background-color: $bg-color;
-            border-radius: $border-radius-small;
-            text-align: center;
-            border: 1px solid darken($bg-color, 7%);
-        }
-    }
-
-    // Таблица статистики
-    .statistics-table {
-        width: 100%;
-        border-collapse: collapse;
-        th, td {
-            padding: 10px;
-            border: 1px solid darken($bg-color, 10%);
-            text-align: left;
-        }
-        td:first-child {
-            font-weight: 500;
-        }
-        tr:nth-child(even) {
-            background-color: darken($bg-color, 2%);
-        }
-    }
-
-    // Ответственные
+    // --- Ответственные ---
     .moderators-list {
         display: flex;
         flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
+        gap: 20px;
+        align-items: center; // Центрируем карточку модератора
 
         .moderator-item {
-            padding: 15px;
+            padding: 20px;
             background-color: $bg-color;
-            border-radius: $border-radius-small;
+            border-radius: $border-radius-medium; // Более скругленные углы
             border: 1px solid darken($bg-color, 7%);
             text-align: center;
+            max-width: 300px; // Ограничим ширину карточки
+            width: 100%;
+            box-shadow: 0 3px 7px rgba($dark-shadow-color, 0.15);
+
+            &__avatar { // Для аватара модератора (как на макете)
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: $dark-shadow-color; // Placeholder
+                margin: 0 auto 15px auto;
+                // Если <img>: img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3em; color: $bg-color; // Для иконки-плейсхолдера
+                overflow: hidden;
+            }
 
             &__name {
                 font-weight: bold;
-                font-size: 1.15em;
+                font-size: 1.2em;
                 margin-bottom: 5px;
             }
             &__role {
                 font-style: italic;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 color: darken($text-color, 5%);
+                font-size: 0.95em;
             }
             &__links {
                 display: flex;
                 justify-content: center;
-                gap: 20px;
-                a {
+                gap: 15px; // Промежуток между кнопками
+                a { // Стилизуем ссылки как кнопки
                     color: $link-color;
                     text-decoration: none;
                     font-weight: 500;
+                    padding: 8px 15px;
+                    border-radius: $border-radius-small;
+                    background-color: darken($bg-color, 5%);
+                    border: 1px solid darken($bg-color, 10%);
+                    transition: all 0.2s ease;
                     &:hover {
-                        text-decoration: underline;
+                        background-color: darken($bg-color, 10%);
+                        border-color: darken($bg-color, 20%);
                         color: $link-hover-color;
                     }
                 }
             }
         }
     }
+    // Примечание: "Автоматическая карусель с артами" сбоку от "Ответственные"
+    // потребует дополнительной разметки и JS. Пока этот блок не реализован.
+    // Можно было бы сделать грид из двух колонок внутри секции "Ответственные",
+    // если карусель должна быть на одном уровне.
 }

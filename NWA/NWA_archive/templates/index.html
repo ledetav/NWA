@@ -1,49 +1,64 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Главная страница{% endblock %}
+
 {% block page_content %}
 <div class="index-page">
     <div class="index-page__grid">
         <section class="index-page__section index-page__section--upcoming-birthdays">
             <h2 class="index-page__section-title">Ближайшие именинники</h2>
             <div class="upcoming-birthdays__list">
-                <div class="upcoming-birthdays__item">1 именинник (пример)</div>
-                <div class="upcoming-birthdays__item">2 именинник (пример)</div>
-                <div class="upcoming-birthdays__item">3 именинник (пример)</div>
-                <div class="upcoming-birthdays__item">4 именинник (пример)</div>
+                <!-- Пример именинника -->
+                <div class="upcoming-birthdays__item">
+                    <div class="upcoming-birthdays__date">15 мая</div>
+                    <div class="upcoming-birthdays__avatar">
+                        <i class="fa-solid fa-cat"></i>
+                    </div>
+                    <div class="upcoming-birthdays__name">Лапоух</div>
+                </div>
+                <div class="upcoming-birthdays__item">
+                    <div class="upcoming-birthdays__date">25 мая</div>
+                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
+                    <div class="upcoming-birthdays__name">Бабуба</div>
+                </div>
+                <div class="upcoming-birthdays__item">
+                    <div class="upcoming-birthdays__date">5 июня</div>
+                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
+                    <div class="upcoming-birthdays__name">Пощада</div>
+                </div>
+                 <div class="upcoming-birthdays__item">
+                    <div class="upcoming-birthdays__date">10 июня</div>
+                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
+                    <div class="upcoming-birthdays__name">Нервотрепка</div>
+                </div>
             </div>
         </section>
 
         <section class="index-page__section index-page__section--statistics">
-            <h2 class="index-page__section-title">Статистика</h2>
-            <table class="statistics-table">
-                <tr><td>Всего блогов выпустили:</td><td>[переменная]</td></tr>
-                <tr><td>Из них:</td><td></td></tr>
-                <tr><td>Артов:</td><td>[переменная]</td></tr>
-                <tr><td>Текстов:</td><td>[переменная]</td></tr>
-                <tr><td>Кодов:</td><td>[переменная]</td></tr>
-            </table>
+            <h2 class="index-page__section-title">Было создано</h2>
+            <div class="statistics-details">
+                <div class="statistics-details__total-blogs">106</div>
+                <div class="statistics-details__total-blogs-label">блогов</div>
+                <div class="statistics-details__breakdown-title">в них:</div>
+                <div class="statistics-details__breakdown-item"><span>568</span> рисунков</div>
+                <div class="statistics-details__breakdown-item"><span>24568</span> слов</div>
+                <div class="statistics-details__breakdown-item"><span>40618</span> строк кода</div>
+            </div>
         </section>
 
         <section class="index-page__section index-page__section--calendar">
             <h2 class="index-page__section-title">Календарь</h2>
             <div class="calendar">
-                <div class="header">
-                    <button id="Btn-back" title="Предыдущий месяц"><</button>
-                    <h2 id="monthYear">Месяц Год</h2>
-                    <button id="Btn-next" title="Следующий месяц">></button>
+                <div class="calendar__header">
+                    <button id="Btn-back-calendar" title="Предыдущий месяц"><</button>
+                    <h3 id="monthYearDisplayCalendar">Месяц Год</h3>
+                    <button id="Btn-next-calendar" title="Следующий месяц">></button>
                 </div>
-                <div class="weekdays">
-                    <div>Пн</div>
-                    <div>Вт</div>
-                    <div>Ср</div>
-                    <div>Чт</div>
-                    <div>Пт</div>
-                    <div>Сб</div>
-                    <div>Вс</div>
+                <div class="calendar__weekdays">
+                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                 </div>
-                <div class="days">
-                    <!-- Дни будут генерироваться JS -->
+                <div class="calendar__days">
                 </div>
             </div>
         </section>
@@ -52,14 +67,16 @@
             <h2 class="index-page__section-title">Ответственные</h2>
             <div class="moderators-list">
                 <div class="moderator-item">
-                    <div class="moderator-item__name">Имя: [переменная]</div>
-                    <div class="moderator-item__role">Ответственный за [переменная]</div>
+                    <div class="moderator-item__avatar">
+                        <i class="fa-solid fa-user-secret"></i>
+                    </div>
+                    <div class="moderator-item__name">Горемычный Смехотворец</div>
+                    <div class="moderator-item__role">Ответственный за отряд</div>
                     <div class="moderator-item__links">
-                        <a href="[ссылка_вк]">ВК</a>
                         <a href="[ссылка_вар]">Вар</a>
+                        <a href="[ссылка_вк]">ВК</a>
                     </div>
                 </div>
-                 <!-- Можно добавить еще модераторов по аналогии -->
             </div>
         </section>
     </div>
@@ -69,71 +86,72 @@
 {% block scripts_block %}
     {{ block.super }}
     <script>
-    // Простой JS для календаря (пример, требует доработки)
     document.addEventListener('DOMContentLoaded', function () {
-        const monthYearElement = document.getElementById('monthYear');
-        const daysElement = document.querySelector('.index-page .calendar .days'); // Уточнили селектор
-        const prevBtn = document.getElementById('Btn-back');
-        const nextBtn = document.getElementById('Btn-next');
+        const monthYearDisplayCalendar = document.getElementById('monthYearDisplayCalendar');
+        const calendarDaysElement = document.querySelector('.index-page__section--calendar .calendar__days'); // Уточненный селектор
+        const prevCalendarBtn = document.getElementById('Btn-back-calendar');
+        const nextCalendarBtn = document.getElementById('Btn-next-calendar');
 
-        if (!monthYearElement || !daysElement || !prevBtn || !nextBtn) {
+        if (!monthYearDisplayCalendar || !calendarDaysElement || !prevCalendarBtn || !nextCalendarBtn) {
             console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
-            return;
-        }
-
-        let currentDate = new Date();
-
-        function renderCalendar() {
-            currentDate.setDate(1); // Начинаем с первого дня месяца
-            const month = currentDate.getMonth();
-            const year = currentDate.getFullYear();
-
-            monthYearElement.textContent = `${currentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
-
-            daysElement.innerHTML = ''; // Очищаем предыдущие дни
-
-            const firstDayIndex = (currentDate.getDay() + 6) % 7; // 0 (Пн) - 6 (Вс)
-            const lastDay = new Date(year, month + 1, 0).getDate(); // Последний день текущего месяца
+        } else {
+            let calendarCurrentDate = new Date();
             
-            // Пустые ячейки для дней предыдущего месяца
-            for (let i = 0; i < firstDayIndex; i++) {
-                const emptyCell = document.createElement('div');
-                emptyCell.classList.add('empty');
-                daysElement.appendChild(emptyCell);
-            }
+            const birthdaysData = {
+                [new Date().getFullYear()]: { // Текущий год
+                    [new Date().getMonth() + 1]: [2, 15, 23] // Дни рождения в текущем месяце (2, 15, 23 число)
+                },
+            };
 
-            // Ячейки для дней текущего месяца
-            for (let i = 1; i <= lastDay; i++) {
-                const dayCell = document.createElement('div');
-                dayCell.textContent = i;
-                dayCell.dataset.day = i;
-                dayCell.dataset.month = month + 1;
-                dayCell.dataset.year = year;
+            function renderOldCalendar() {
+                const year = calendarCurrentDate.getFullYear();
+                const month = calendarCurrentDate.getMonth(); // 0-11
 
-                // Пример: отметить сегодняшний день
-                const today = new Date();
-                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayCell.classList.add('today'); // Добавьте стиль для .today в SCSS
+                monthYearDisplayCalendar.textContent = `${calendarCurrentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
+                calendarDaysElement.innerHTML = '';
+
+                const firstDayOfMonth = new Date(year, month, 1);
+                const lastDayOfMonth = new Date(year, month + 1, 0);
+                
+                const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // 0 (Пн) - 6 (Вс)
+                const totalDaysInMonth = lastDayOfMonth.getDate();
+
+                for (let i = 0; i < firstDayOfWeek; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.classList.add('empty');
+                    calendarDaysElement.appendChild(emptyCell);
                 }
-                // Пример: отметить день с днем рождения (данные должны приходить с бэкенда)
-                // if (birthdays[year] && birthdays[year][month+1] && birthdays[year][month+1].includes(i)) {
-                //    dayCell.classList.add('has-birthday');
-                // }
-                daysElement.appendChild(dayCell);
+
+                const today = new Date();
+                for (let i = 1; i <= totalDaysInMonth; i++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.textContent = i;
+                    dayCell.dataset.day = i;
+                    dayCell.dataset.month = month + 1;
+                    dayCell.dataset.year = year;
+
+                    if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        dayCell.classList.add('today');
+                    }
+                    if (birthdaysData[year] && birthdaysData[year][month + 1] && birthdaysData[year][month + 1].includes(i)) {
+                        dayCell.classList.add('has-birthday');
+                    }
+                    calendarDaysElement.appendChild(dayCell);
+                }
             }
+
+            prevCalendarBtn.addEventListener('click', () => {
+                calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
+                renderOldCalendar();
+            });
+
+            nextCalendarBtn.addEventListener('click', () => {
+                calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + 1);
+                renderOldCalendar();
+            });
+            
+            renderOldCalendar();
         }
-
-        prevBtn.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            renderCalendar();
-        });
-
-        nextBtn.addEventListener('click', () => {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            renderCalendar();
-        });
-
-        renderCalendar();
     });
     </script>
 {% endblock scripts_block %}
