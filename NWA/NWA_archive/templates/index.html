@@ -1,13 +1,82 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Главная страница</title>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
 </head>
 <body>
-    <div>
-        <header>Меню</header>
-        <h2>Здесь будет главная страница</h2>
-    </div>
+    <div class="main-container">
+        <!-- основной контейнер -->
+        <div class="columns-container">
+            <!-- контейнер для колонок -->
+            <div class="rows-container main-calendar-container item3">
+                <!-- контейнер для строк -->
+                <label>Календарь</label>
+                <div class="calendar">
+                    <div class="header">
+                        <button id="Btn-back">&lt;</button>
+                        <h2 id="monthYear">Месяц Год</h2>
+                        <button id="Btn-next">&gt;</button>
+                    </div>
+                    <div class="weekdays">
+                        <div>Пн</div>
+                        <div>Вт</div>
+                        <div>Ср</div>
+                        <div>Чт</div>
+                        <div>Пт</div>
+                        <div>Сб</div>
+                        <div>Вс</div>
+                    </div>
+                    <div class="days">
+                        <!-- Дни вместе с именинниками будут генерироваться здесь -->
+                    </div>
+                </div>
+            </div>
+            <div class="rows-container item1">
+                <!-- контейнер для строк -->
+                <label>Ближайшие именинники</label>
+                <div class="birthday-container">
+                    <div class="near-birthday">1 именинник</div>
+                    <div class="near-birthday">2 именинник</div>
+                    <div class="near-birthday">3 именинник</div>
+                    <div class="near-birthday">4 именинник</div>
+                </div>
+            </div>
+            <div class="rows-container item2">
+                <!-- контейнер для строк -->
+                <label>Статистика</label>
+                <table>
+                    <tr><td>Всего блогов выпустили:</td></tr>
+                    <tr><td> сюда переменную, суммирующую блоги </td></tr>
+                    <tr><td>Из них:</td></tr>
+                    <tr><td>Артов: переменная</td></tr>
+                    <tr><td>Текстов: переменная</td></tr>
+                    <tr><td>Кодов: переменная</td></tr>
+                        <!-- заметка: решила использовать таблицу, тк показалось что здесь не необходимо лезть в гриды. на место переменных необходимо подставить соответствующие переменные -->
+
+                </table>
+            </div>
+            <div class="rows-container item4">
+                <!-- контейнер для строк -->
+                <label>Ответственные</label>
+                <div class="moderators-container">
+                    <!-- контейнер для вывода информации об ответственных -->
+                    <div class="item5">
+                        Имя: "сюда переменную"
+                    </div>
+                    <div class="item6">
+                        Ответственный за "сюда переменную"
+                    </div>
+                    <div class="item7">
+                        <a href="ссылку на вк хочу">вк</a>
+                    </div>
+                    <div class="item8">
+                        <a href="ссфлку на вар хочу">вар</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 </html>

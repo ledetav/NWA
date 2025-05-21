@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Лог Дарителей Тепла</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
+</head>
+<body>
+    <div class="main-container">
+        <div class="filter">
+            <div class="item9">
+                Фильтр по типу работ
+            </div>
+            <div class="item10">
+                <label for="type-work">Выберите тип работы:</label>
+                <select id="type-work" name="type-work">
+                    <!-- цикл for по id типа работ-->
+                    <option value="option1">название типа работы</option>
+                    <!-- конец цикла for -->
+                </select>
+            </div>
+            <div class="item11">
+                <a class="button filt" href="/">Фильтровать</a>
+            </div>
+            <div class="item12">
+                <label for="type-work">Выберите именинника:</label>
+                <select id="type-work" name="type-work">
+                    <!-- цикл for по id именинников-->
+                    <option value="option1">переменная с именами</option>
+                    <!-- конец цикла for -->
+                </select>
+            </div>
+            <div class="item13">
+                <a class="button find" href="/">Найти</a>
+            </div>
+        </div>
+        <div class="w-100">
+        <table>
+            <thead>
+                <tr>
+                    <th>Именинник</th>
+                    <th>Дата</th>
+                    <th>Тип работы</th>
+                    <th>Даритель</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- for цикл для того, чтобы проверять, если есть именинник с работой - добавляет. Скорее всего лучше делать по id работы, но не уверена  -->
+                <tr>
+                    <td>Имечко красивое</td>
+                    <td>14.05.2024</td>
+                    <td>текст</td>
+                    <td>Пельмень обыкновенный</td>
+                </tr>
+                <!-- конец for -->
+            </tbody>
+        </table>
+    </div>
+    </div>
+</body>
+</html>

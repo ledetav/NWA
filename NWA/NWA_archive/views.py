@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from .models import Moderators, NorthernWarmers, Blogs, NWAArchiveArts, NWAArchiveTexts, NWAArchiveCongratulations, NWAArchiveCodes
+from django.db import connection
 
 def main_page_view(request):
     #data = { 'здесь будут переменные'} как передавать переменные: "<название переменное>": <переменная>
