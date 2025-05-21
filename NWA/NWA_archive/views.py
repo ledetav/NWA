@@ -4,8 +4,12 @@ from .models import Moderators, NorthernWarmers, Blogs, NWAArchiveArts, NWAArchi
 from django.db import connection
 
 def main_page_view(request):
-    #data = { 'здесь будут переменные'} как передавать переменные: "<название переменное>": <переменная>
-    return render(request, 'index.html')
+    blog_count = Blogs.objects.count()  # Получаем количество строк
+    art_count = NWAArchiveArts.objects.count()  # Получаем количество строк
+    text_count = NWAArchiveTexts.objects.count()  # Получаем количество строк
+    code_count = NWAArchiveCodes.objects.count()  # Получаем количество строк
+    context = {'blog_count': blog_count, 'art_count': art_count, 'text_count': text_count, 'code_count': code_count}
+    return render(request, 'index.html', context)
 
 def log_page_view(request):
     return render(request, 'log.html')
