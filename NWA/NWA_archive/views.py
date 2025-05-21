@@ -45,7 +45,55 @@ def main_page_view(request):
     return render(request, 'index.html', context)
 
 def log_page_view(request):
-    return render(request, 'log.html')
+    # Получаем все блоги
+    blogs = Blogs.objects.all()
+
+    # Получаем все арты
+    arts = NWAArchiveArts.objects.all()
+
+    # Получаем все тексты
+    texts = NWAArchiveTexts.objects.all()
+
+    # Получаем все коды
+    codes = NWAArchiveCodes.objects.all()
+
+    # Создаем список для хранения всех данных
+    all_works = []
+
+    # Добавляем информацию из NWAArchiveArts
+    for art in arts:
+        all_works.append({
+            'celebrant_name': art.blog_id.celebrant_name,
+            'birthday_date': art.blog_id.birthday_date,
+            'work_type': 'Art',  # Указываем тип работы
+            'nw_name': art.nw_ID.nw_name,
+            'work_date': art.work_publication_date,
+        })
+
+    # Добавляем информацию из NWAArchiveTexts
+    for text in texts:
+        all_works.append({
+            'celebrant_name': text.blog_id.celebrant_name,
+            'birthday_date': text.blog_id.birthday_date,
+            'work_type': 'Text',  # Указываем тип работы
+            'nw_name': text.nw_ID.nw_name,
+            'work_date': text.work_publication_date,
+        })
+
+    # Добавляем информацию из NWAArchiveCodes
+    for code in codes:
+        all_works.append({
+            'celebrant_name': code.blog_id.celebrant_name,
+            'birthday_date': code.blog_id.birthday_date,
+            'work_type': 'Code',  # Указываем тип работы
+            'nw_name': code.nw_ID.nw_name,
+            'work_date': code.work_publication_date,
+        })
+
+    context = {
+        'blogs': all_works,
+    }
+    return render(request, 'log.html', context)
 
 def test_page_view(request):
     return render(request, 'test.html')

@@ -45,23 +45,19 @@
                     <th>Дата</th>
                     <th>Тип работы</th>
                     <th>Даритель</th>
+                    <th>Дата публикации</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Пример: for цикл для вывода работ -->
+                {% for row in blogs %}
                 <tr>
-                    <td>Имечко Красивое</td>
-                    <td>14.05.2024</td>
-                    <td>Текст</td>
-                    <td>Пельмень Обыкновенный</td>
+                    <td>{{ row.celebrant_name }}</td>
+                    <td>{{ row.birthday_date }}</td>
+                    <td>{{ row.work_type }}</td>
+                    <td>{{ row.nw_name }}</td>
+                    <td>{{ row.work_date }}</td>
                 </tr>
-                <tr>
-                    <td>Другой Именинник</td>
-                    <td>10.03.2024</td>
-                    <td>Арт</td>
-                    <td>Художник Неизвестный</td>
-                </tr>
-                <!-- конец for -->
+                {% endfor %}
             </tbody>
         </table>
     </div>
