@@ -6,11 +6,12 @@
 
 .main-container {
   display: grid;
-  grid-template-rows: 1fr;
+  grid-template-rows: auto auto;
   grid-auto-flow: row;
-  gap: 20px;
+  text-align: center;
 }
 
+/* Стили для Главной страницы */
 .columns-container {
     display: grid;
     grid-template-columns: auto;
@@ -142,4 +143,55 @@ label {
 
 .item8 {
     grid-area: row-8;
+}
+
+/* Стили для Лога */
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+th, td {
+    padding: 4px; 
+    word-wrap: break-word;
+    text-align: center;
+    width: 1fr;
+
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.filter {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas: 
+    "row-9 ."
+    "row-10 row-11"
+    "row-12 row-13";
+    gap: 20px;
+}
+
+.item9 {
+    grid-area: row-9;
+    grid-column: span 2;
+}
+
+.item10 {
+    grid-area: row-10;
+}
+
+.item11 {
+    grid-area: row-11;
+}
+
+.item12 {
+    grid-area: row-12;
+}
+
+.item13 {
+    grid-area: row-13;
 }
