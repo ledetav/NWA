@@ -1,0 +1,204 @@
+@import '__variables';
+@import '__mixins';
+@import 'modal_';
+@import '__media';
+
+// Общие стили
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: $bg-color;
+    color: $text-color;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.page__inner-wrapper { 
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1250px;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 100vh;
+}
+
+// --- Шапка и Навигация ---
+.header {
+    padding: 15px 0; // Отступы вокруг навигационной панели
+    margin-bottom: 30px; // Отступ снизу от шапки
+}
+
+.header__nav {
+    &--neumorphic-bar {
+        display: flex;
+        align-items: center; // Вертикальное выравнивание иконки и ссылок
+        padding: 10px 15px; // Внутренние отступы самой панели
+        @include neumorphic-convex(6px, 12px, $border-radius-large); // Неоморфизм для панели
+        gap: 20px; // Расстояние между иконкой и списком ссылок
+    }
+}
+
+.header__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0; // Убираем дефолтные отступы ul
+    display: flex; // Располагаем пункты меню в ряд
+    gap: 10px; // Расстояние между пунктами меню
+    // Если иконка слева, а ссылки справа:
+    // margin-left: auto; // Отодвинет список ссылок вправо
+}
+
+.header__nav-link { // Стили для обычных текстовых ссылок и для иконки-ссылки
+    display: inline-flex; // Для лучшего контроля размеров и выравнивания
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px; // Паддинги для текстовых ссылок
+    text-decoration: none;
+    color: $link-color;
+    font-weight: 500;
+    @include neumorphic-convex(5px, 10px, $border-radius-medium);
+    transition: all 0.2s ease-out; // Плавность для всех переходов
+
+    &:hover {
+        color: $link-hover-color;
+        @include neumorphic-concave(4px, 8px, $border-radius-medium);
+    }
+
+    &:active {
+        color: $link-hover-color;
+        @include neumorphic-concave(2px, 4px, $border-radius-medium);
+        // Более выраженная тень при нажатии
+        box-shadow:
+            inset 2px 2px 4px darken($dark-shadow-color, 8%),
+            inset -2px -2px 4px lighten($light-shadow-color, 8%);
+    }
+
+    // Модификатор для иконки-ссылки
+    &--home-icon {
+        width: 48px;    // Задаем фиксированный размер для круглой кнопки
+        height: 48px;
+        padding: 0;     // Убираем паддинг, т.к. размер фиксирован
+        border-radius: 50%; // Делаем кнопку круглой
+
+        // Переопределяем неоморфизм для круглой кнопки
+        @include neumorphic-convex(5px, 10px, 50%);
+
+        &:hover {
+            @include neumorphic-concave(4px, 8px, 50%);
+        }
+        &:active {
+            @include neumorphic-concave(2px, 4px, 50%);
+            box-shadow:
+                inset 2px 2px 4px darken($dark-shadow-color, 8%),
+                inset -2px -2px 4px lighten($light-shadow-color, 8%);
+        }
+    }
+}
+
+.header__home-icon-img {
+    width: 30px; // Размер самой картинки внутри кнопки
+    height: 30px;
+    display: block; // Убирает лишнее пространство под картинкой
+    // border-radius: 50%; // Если сама картинка должна быть обрезана по кругу
+}
+
+
+// Основной контент (окно)
+.main__window {
+    &--neumorphic { // Модификатор для неоморфизма основного окна
+        padding: 25px;
+        margin-bottom: 30px; // Отступ под окном контента
+        @include neumorphic-convex(10px, 15px, $border-radius-large);
+        flex-grow: 1; // Чтобы занимало доступное пространство
+    }
+}
+
+
+// Карточки контента
+.content-card {
+    padding: 20px;
+    margin-bottom: 20px;
+    @include neumorphic-convex(10px, 15px, $border-radius-large);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &__body {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    &__text {
+        flex-grow: 1;
+        margin: 0;
+        color: darken($text-color, 10%);
+    }
+
+    &__image {
+        max-width: 150px;
+        height: auto;
+        display: block;
+        border-radius: $border-radius-medium;
+    }
+
+    &__action {
+        flex-shrink: 0;
+    }
+}
+
+
+// Кнопка (общий блок)
+.button {
+    padding: 12px 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    color: $link-color;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    transition: all 0.2s ease-out; // Плавность для всех переходов
+
+    &--neumorphic {
+        @include neumorphic-convex(6px, 12px, $border-radius-medium);
+
+        &:hover {
+            color: $link-hover-color;
+            @include neumorphic-concave(5px, 10px, $border-radius-medium);
+        }
+
+        &:active {
+            color: $link-hover-color;
+            @include neumorphic-concave(3px, 6px, $border-radius-medium);
+            box-shadow:
+                inset 3px 3px 6px darken($dark-shadow-color, 8%),
+                inset -3px -3px 6px lighten($light-shadow-color, 8%);
+        }
+    }
+
+    &__icon {
+        max-width: 100px;
+        max-height: 50px;
+        vertical-align: middle;
+        display: block;
+    }
+}
+
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9em;
+    color: lighten($text-color, 15%);
+    margin-top: auto;
+}

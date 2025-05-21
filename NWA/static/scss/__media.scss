@@ -1,0 +1,113 @@
+// Адаптивность (общая и для модального окна)
+@media (max-width: 768px) {
+    .page__inner-wrapper { // Адаптируем page__inner-wrapper
+        padding: 10px;
+    }
+
+    .header__nav { // Адаптация навигации
+        &--neumorphic-bar {
+            padding: 8px 10px; // Уменьшаем паддинги панели
+            gap: 10px; // Уменьшаем расстояние
+        }
+    }
+    
+    .header__nav-list {
+        gap: 5px; // Уменьшаем расстояние между ссылками
+    }
+
+    .header__nav-link {
+        padding: 8px 12px; // Уменьшаем паддинги текстовых ссылок
+        font-size: 0.9em;
+
+        &--home-icon {
+            width: 40px;
+            height: 40px;
+        }
+    }
+    .header__home-icon-img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .main__window--neumorphic {
+        padding: 15px;
+    }
+
+    .content-card {
+        padding: 15px;
+        &__body {
+            flex-direction: column; // На мобильных элементы карточки в столбик
+            gap: 10px;
+            text-align: center;
+        }
+        &__image {
+            max-width: 120px;
+        }
+    }
+    .button { // Общие кнопки
+        padding: 10px 20px;
+        font-size: 0.9em;
+         &__icon {
+            max-width: 80px;
+            max-height: 40px;
+        }
+    }
+
+
+    .modal {
+        padding: 10px; // Меньше отступы для оверлея на маленьких экранах
+        &__window {
+            padding: 20px;
+            max-height: 95vh; // Чуть больше места по высоте
+        }
+        &__close {
+            top: 5px;
+            right: 5px;
+            font-size: 28px;
+        }
+        &__footer {
+            // Кнопки в столбик для удобства
+            .button { // Конкретизируем, что это кнопки внутри футера модалки
+                display: block;
+                width: 100%;
+                max-width: 280px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: 10px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .header__nav-link {
+        padding: 6px 10px;
+        font-size: 0.85em;
+
+        &--home-icon {
+            width: 36px;
+            height: 36px;
+        }
+    }
+    .header__home-icon-img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .content-card {
+        &__image {
+            max-width: 100px;
+        }
+    }
+    .modal__window {
+        padding: 15px;
+    }
+     .button {
+        &__icon {
+            max-width: 60px; // Еще меньше иконка на очень маленьких экранах
+        }
+    }
+}
