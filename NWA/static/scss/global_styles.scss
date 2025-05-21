@@ -1,6 +1,17 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
 @import '__variables';
 @import '__mixins';
-@import 'modal_';
+@import '_index-page'; // Стили для главной страницы
+@import '_log-page'; // Стили для страницы логов
 @import '__media';
 
 // Общие стили
@@ -16,7 +27,7 @@ body {
     min-height: 100vh;
 }
 
-.page__inner-wrapper { 
+.page__inner-wrapper {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -54,7 +65,8 @@ body {
     // margin-left: auto; // Отодвинет список ссылок вправо
 }
 
-.header__nav-link { // Стили для обычных текстовых ссылок и для иконки-ссылки
+.header__nav-link {
+    // Стили для обычных текстовых ссылок и для иконки-ссылки
     display: inline-flex; // Для лучшего контроля размеров и выравнивания
     align-items: center;
     justify-content: center;
@@ -81,9 +93,9 @@ body {
 
     // Модификатор для иконки-ссылки
     &--home-icon {
-        width: 48px;    // Задаем фиксированный размер для круглой кнопки
+        width: 48px; // Задаем фиксированный размер для круглой кнопки
         height: 48px;
-        padding: 0;     // Убираем паддинг, т.к. размер фиксирован
+        padding: 0; // Убираем паддинг, т.к. размер фиксирован
         border-radius: 50%; // Делаем кнопку круглой
 
         // Переопределяем неоморфизм для круглой кнопки
@@ -92,6 +104,7 @@ body {
         &:hover {
             @include neumorphic-concave(4px, 8px, 50%);
         }
+
         &:active {
             @include neumorphic-concave(2px, 4px, 50%);
             box-shadow:
@@ -111,7 +124,8 @@ body {
 
 // Основной контент (окно)
 .main__window {
-    &--neumorphic { // Модификатор для неоморфизма основного окна
+    &--neumorphic {
+        // Модификатор для неоморфизма основного окна
         padding: 25px;
         margin-bottom: 30px; // Отступ под окном контента
         @include neumorphic-convex(10px, 15px, $border-radius-large);

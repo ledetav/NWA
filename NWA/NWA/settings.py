@@ -41,6 +41,15 @@ INSTALLED_APPS = [
     'NWA_archive',
 ]
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
+]
+
+SASS_PROCESSOR_OUTPUT_DIR = 'css/compiled'
+SASS_PROCESSOR_ENABLED = DEBUG
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -120,7 +129,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-DATE_INPUT_FORMATS = ['%d.%m.%Y', '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y']
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

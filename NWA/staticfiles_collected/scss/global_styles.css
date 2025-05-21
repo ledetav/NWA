@@ -1,96 +1,206 @@
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-  padding: 20px;
+html {
   box-sizing: border-box; }
-  .modal--open-transition {
-    display: flex; }
-  .modal--visible {
-    opacity: 1; }
-    .modal--visible .modal__window {
-      transform: scale(1) translateY(0);
-      opacity: 1; }
-  .modal__window {
-    position: relative;
-    padding: 20px 20px;
-    width: 100%;
-    max-width: 180vh;
-    min-height: 90vh;
-    box-sizing: border-box;
-    transform: scale(0.95) translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease-out 0.1s, opacity 0.3s ease-out 0.1s;
-    overflow-y: auto;
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit; }
+
+.index-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-rows: auto;
+  gap: 25px; }
+
+.index-page__section {
+  padding: 20px;
+  border-radius: 12px;
+  background-color: #e6eaf0;
+  box-shadow: 0 2px 5px rgba(163, 177, 198, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; }
+
+.index-page__section-title {
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #3c3c3c;
+  margin-bottom: 10px; }
+
+.index-page .calendar {
+  display: flex;
+  flex-direction: column;
+  width: 100%; }
+  .index-page .calendar .header {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    text-align: center; }
-    .modal__window--neumorphic {
-      background-color: #e0e5ec;
-      border-radius: 8px;
-      box-shadow: 5px 5px 7px #a3b1c6, -5px -5px 7px #ffffff;
-      transition: box-shadow 0.3s ease-in-out; }
-  .modal__close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: none;
-    font-size: 32px;
-    line-height: 1;
-    cursor: pointer;
-    color: #555;
-    background-color: #e0e5ec;
-    border-radius: 100%;
-    box-shadow: 3px 3px 5px #a3b1c6, -3px -3px 5px #ffffff;
-    transition: box-shadow 0.3s ease-in-out; }
-    .modal__close:hover {
-      color: #2980b9;
-      background-color: #e0e5ec;
-      border-radius: 50%;
-      box-shadow: inset 2px 2px 4px #a3b1c6, inset -2px -2px 4px #ffffff;
-      transition: box-shadow 0.3s ease-in-out; }
-  .modal__title {
-    margin-top: 0;
-    color: #2f2f2f;
-    margin-bottom: 20px;
-    width: 100%; }
-  .modal__body {
-    margin-bottom: 20px;
-    width: 100%; }
-  .modal__text {
-    margin-bottom: 15px; }
-    .modal__text:last-child {
-      margin-bottom: 0; }
-  .modal__image {
-    max-width: 100%;
-    height: auto;
-    max-height: 250px;
-    border-radius: 12px;
-    margin-top: 15px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto; }
-  .modal__footer {
-    width: 100%;
+    padding: 8px 0; }
+    .index-page .calendar .header button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.6em;
+      color: #555;
+      padding: 5px 10px;
+      border-radius: 8px; }
+      .index-page .calendar .header button:hover {
+        color: #3498db;
+        background-color: #d0d8e2; }
+    .index-page .calendar .header h2 {
+      font-size: 1.2em;
+      margin: 0;
+      font-weight: 500; }
+  .index-page .calendar .weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
     text-align: center;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(163, 177, 198, 0.2); }
-  .modal__action-button {
-    margin: 5px; }
+    font-weight: bold;
+    padding: 8px 0;
+    border-bottom: 1px solid #c0cad9; }
+    .index-page .calendar .weekdays div {
+      padding: 5px; }
+  .index-page .calendar .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 3px;
+    padding: 8px 0; }
+    .index-page .calendar .days div {
+      text-align: center;
+      padding: 10px 5px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      min-height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      .index-page .calendar .days div:hover {
+        background-color: #d0d8e2;
+        border-color: #b1bdcf; }
+      .index-page .calendar .days div.has-birthday {
+        background-color: #e1f0fa;
+        font-weight: bold;
+        border: 1px solid #3498db; }
+
+.index-page .upcoming-birthdays__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; }
+
+.index-page .upcoming-birthdays__item {
+  padding: 12px;
+  background-color: #e0e5ec;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #cad2de; }
+
+.index-page .statistics-table {
+  width: 100%;
+  border-collapse: collapse; }
+  .index-page .statistics-table th, .index-page .statistics-table td {
+    padding: 10px;
+    border: 1px solid #c0cad9;
+    text-align: left; }
+  .index-page .statistics-table td:first-child {
+    font-weight: 500; }
+  .index-page .statistics-table tr:nth-child(even) {
+    background-color: #dae0e8; }
+
+.index-page .moderators-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: stretch; }
+  .index-page .moderators-list .moderator-item {
+    padding: 15px;
+    background-color: #e0e5ec;
+    border-radius: 8px;
+    border: 1px solid #cad2de;
+    text-align: center; }
+    .index-page .moderators-list .moderator-item__name {
+      font-weight: bold;
+      font-size: 1.15em;
+      margin-bottom: 5px; }
+    .index-page .moderators-list .moderator-item__role {
+      font-style: italic;
+      margin-bottom: 10px;
+      color: #484848; }
+    .index-page .moderators-list .moderator-item__links {
+      display: flex;
+      justify-content: center;
+      gap: 20px; }
+      .index-page .moderators-list .moderator-item__links a {
+        color: #3498db;
+        text-decoration: none;
+        font-weight: 500; }
+        .index-page .moderators-list .moderator-item__links a:hover {
+          text-decoration: underline;
+          color: #2980b9; }
+
+.log-page {
+  display: flex;
+  flex-direction: column;
+  gap: 25px; }
+  .log-page__filter {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    border-radius: 12px;
+    background-color: #e6eaf0;
+    box-shadow: 0 2px 5px rgba(163, 177, 198, 0.1); }
+    .log-page__filter .filter__title {
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 1.3em;
+      font-weight: 600;
+      color: #3c3c3c;
+      margin-bottom: 10px; }
+    .log-page__filter .filter__group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px; }
+    .log-page__filter .filter__label {
+      font-weight: 500;
+      color: #484848; }
+    .log-page__filter .filter__select {
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #93a4bc;
+      background-color: #e0e5ec;
+      color: #555;
+      width: 100%; }
+      .log-page__filter .filter__select:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2); }
+    .log-page__filter .filter__action {
+      display: flex;
+      align-items: flex-end; }
+      .log-page__filter .filter__action .button {
+        width: 100%; }
+  .log-page__table-container {
+    width: 100%;
+    overflow-x: auto; }
+  .log-page .data-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse; }
+    .log-page .data-table th, .log-page .data-table td {
+      padding: 12px 15px;
+      word-wrap: break-word;
+      text-align: center;
+      border: 1px solid #bac5d5; }
+    .log-page .data-table th {
+      background-color: #cdd5e0;
+      font-weight: 600;
+      color: #2f2f2f; }
+    .log-page .data-table tbody tr:nth-child(even) {
+      background-color: #dae0e8; }
+    .log-page .data-table tbody tr:hover {
+      background-color: #d0d8e2; }
 
 @media (max-width: 768px) {
   .page__inner-wrapper {

@@ -1,82 +1,139 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Главная страница</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
-</head>
-<body>
-    <div class="main-container">
-        <!-- основной контейнер -->
-        <div class="columns-container">
-            <!-- контейнер для колонок -->
-            <div class="rows-container main-calendar-container item3">
-                <!-- контейнер для строк -->
-                <label>Календарь</label>
-                <div class="calendar">
-                    <div class="header">
-                        <button id="Btn-back">&lt;</button>
-                        <h2 id="monthYear">Месяц Год</h2>
-                        <button id="Btn-next">&gt;</button>
-                    </div>
-                    <div class="weekdays">
-                        <div>Пн</div>
-                        <div>Вт</div>
-                        <div>Ср</div>
-                        <div>Чт</div>
-                        <div>Пт</div>
-                        <div>Сб</div>
-                        <div>Вс</div>
-                    </div>
-                    <div class="days">
-                        <!-- Дни вместе с именинниками будут генерироваться здесь -->
-                    </div>
-                </div>
-            </div>
-            <div class="rows-container item1">
-                <!-- контейнер для строк -->
-                <label>Ближайшие именинники</label>
-                <div class="birthday-container">
-                    <div class="near-birthday">1 именинник</div>
-                    <div class="near-birthday">2 именинник</div>
-                    <div class="near-birthday">3 именинник</div>
-                    <div class="near-birthday">4 именинник</div>
-                </div>
-            </div>
-            <div class="rows-container item2">
-                <!-- контейнер для строк -->
-                <label>Статистика</label>
-                <table>
-                    <tr><td>Всего блогов выпустили:</td></tr>
-                    <tr><td> сюда переменную, суммирующую блоги </td></tr>
-                    <tr><td>Из них:</td></tr>
-                    <tr><td>Артов: переменная</td></tr>
-                    <tr><td>Текстов: переменная</td></tr>
-                    <tr><td>Кодов: переменная</td></tr>
-                        <!-- заметка: решила использовать таблицу, тк показалось что здесь не необходимо лезть в гриды. на место переменных необходимо подставить соответствующие переменные -->
 
-                </table>
+{% block page_content %}
+<div class="index-page">
+    <div class="index-page__grid">
+        <section class="index-page__section index-page__section--upcoming-birthdays">
+            <h2 class="index-page__section-title">Ближайшие именинники</h2>
+            <div class="upcoming-birthdays__list">
+                <div class="upcoming-birthdays__item">1 именинник (пример)</div>
+                <div class="upcoming-birthdays__item">2 именинник (пример)</div>
+                <div class="upcoming-birthdays__item">3 именинник (пример)</div>
+                <div class="upcoming-birthdays__item">4 именинник (пример)</div>
             </div>
-            <div class="rows-container item4">
-                <!-- контейнер для строк -->
-                <label>Ответственные</label>
-                <div class="moderators-container">
-                    <!-- контейнер для вывода информации об ответственных -->
-                    <div class="item5">
-                        Имя: "сюда переменную"
-                    </div>
-                    <div class="item6">
-                        Ответственный за "сюда переменную"
-                    </div>
-                    <div class="item7">
-                        <a href="ссылку на вк хочу">вк</a>
-                    </div>
-                    <div class="item8">
-                        <a href="ссфлку на вар хочу">вар</a>
-                    </div>
+        </section>
+
+        <section class="index-page__section index-page__section--statistics">
+            <h2 class="index-page__section-title">Статистика</h2>
+            <table class="statistics-table">
+                <tr><td>Всего блогов выпустили:</td><td>[переменная]</td></tr>
+                <tr><td>Из них:</td><td></td></tr>
+                <tr><td>Артов:</td><td>[переменная]</td></tr>
+                <tr><td>Текстов:</td><td>[переменная]</td></tr>
+                <tr><td>Кодов:</td><td>[переменная]</td></tr>
+            </table>
+        </section>
+
+        <section class="index-page__section index-page__section--calendar">
+            <h2 class="index-page__section-title">Календарь</h2>
+            <div class="calendar">
+                <div class="header">
+                    <button id="Btn-back" title="Предыдущий месяц"><</button>
+                    <h2 id="monthYear">Месяц Год</h2>
+                    <button id="Btn-next" title="Следующий месяц">></button>
+                </div>
+                <div class="weekdays">
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
+                </div>
+                <div class="days">
+                    <!-- Дни будут генерироваться JS -->
                 </div>
             </div>
-        </div>
-</body>
-</html>
+        </section>
+
+        <section class="index-page__section index-page__section--moderators">
+            <h2 class="index-page__section-title">Ответственные</h2>
+            <div class="moderators-list">
+                <div class="moderator-item">
+                    <div class="moderator-item__name">Имя: [переменная]</div>
+                    <div class="moderator-item__role">Ответственный за [переменная]</div>
+                    <div class="moderator-item__links">
+                        <a href="[ссылка_вк]">ВК</a>
+                        <a href="[ссылка_вар]">Вар</a>
+                    </div>
+                </div>
+                 <!-- Можно добавить еще модераторов по аналогии -->
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block scripts_block %}
+    {{ block.super }}
+    <script>
+    // Простой JS для календаря (пример, требует доработки)
+    document.addEventListener('DOMContentLoaded', function () {
+        const monthYearElement = document.getElementById('monthYear');
+        const daysElement = document.querySelector('.index-page .calendar .days'); // Уточнили селектор
+        const prevBtn = document.getElementById('Btn-back');
+        const nextBtn = document.getElementById('Btn-next');
+
+        if (!monthYearElement || !daysElement || !prevBtn || !nextBtn) {
+            console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
+            return;
+        }
+
+        let currentDate = new Date();
+
+        function renderCalendar() {
+            currentDate.setDate(1); // Начинаем с первого дня месяца
+            const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+
+            monthYearElement.textContent = `${currentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
+
+            daysElement.innerHTML = ''; // Очищаем предыдущие дни
+
+            const firstDayIndex = (currentDate.getDay() + 6) % 7; // 0 (Пн) - 6 (Вс)
+            const lastDay = new Date(year, month + 1, 0).getDate(); // Последний день текущего месяца
+            
+            // Пустые ячейки для дней предыдущего месяца
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.classList.add('empty');
+                daysElement.appendChild(emptyCell);
+            }
+
+            // Ячейки для дней текущего месяца
+            for (let i = 1; i <= lastDay; i++) {
+                const dayCell = document.createElement('div');
+                dayCell.textContent = i;
+                dayCell.dataset.day = i;
+                dayCell.dataset.month = month + 1;
+                dayCell.dataset.year = year;
+
+                // Пример: отметить сегодняшний день
+                const today = new Date();
+                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    dayCell.classList.add('today'); // Добавьте стиль для .today в SCSS
+                }
+                // Пример: отметить день с днем рождения (данные должны приходить с бэкенда)
+                // if (birthdays[year] && birthdays[year][month+1] && birthdays[year][month+1].includes(i)) {
+                //    dayCell.classList.add('has-birthday');
+                // }
+                daysElement.appendChild(dayCell);
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        renderCalendar();
+    });
+    </script>
+{% endblock scripts_block %}

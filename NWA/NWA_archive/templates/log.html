@@ -1,42 +1,44 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Лог Дарителей Тепла</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{% static 'css\styles.css' %}">
-</head>
-<body>
-    <div class="main-container">
-        <div class="filter">
-            <div class="item9">
-                Фильтр по типу работ
-            </div>
-            <div class="item10">
-                <label for="type-work">Выберите тип работы:</label>
-                <select id="type-work" name="type-work">
-                    <!-- цикл for по id типа работ-->
-                    <option value="option1">название типа работы</option>
-                    <!-- конец цикла for -->
-                </select>
-            </div>
-            <div class="item11">
-                <a class="button filt" href="/">Фильтровать</a>
-            </div>
-            <div class="item12">
-                <label for="type-work">Выберите именинника:</label>
-                <select id="type-work" name="type-work">
-                    <!-- цикл for по id именинников-->
-                    <option value="option1">переменная с именами</option>
-                    <!-- конец цикла for -->
-                </select>
-            </div>
-            <div class="item13">
-                <a class="button find" href="/">Найти</a>
-            </div>
+
+{% block title %}Лог Дарителей Тепла{% endblock %}
+
+{% block page_content %}
+<div class="log-page">
+    <div class="log-page__filter">
+        <h2 class="filter__title">Фильтры</h2>
+        <div class="filter__group">
+            <label class="filter__label" for="type-work-select">Выберите тип работы:</label>
+            <select class="filter__select" id="type-work-select" name="type-work">
+                <!-- Пример: цикл for по id типа работ -->
+                <option value="all">Все типы</option>
+                <option value="art">Арт</option>
+                <option value="text">Текст</option>
+                <option value="code">Код</option>
+                <!-- конец цикла for -->
+            </select>
         </div>
-        <div class="w-100">
-        <table>
+        <div class="filter__action">
+            <button type="button" class="button button--neumorphic filter__button">Фильтровать</button>
+        </div>
+        
+        <div class="filter__group">
+            <label class="filter__label" for="celebrant-select">Выберите именинника:</label>
+            <select class="filter__select" id="celebrant-select" name="celebrant-name">
+                <!-- Пример: цикл for по id именинников -->
+                <option value="all">Все именинники</option>
+                <option value="ivanov">Иванов Иван</option>
+                <option value="petrov">Петров Петр</option>
+                <!-- конец цикла for -->
+            </select>
+        </div>
+        <div class="filter__action">
+             <button type="button" class="button button--neumorphic filter__button">Найти</button>
+        </div>
+    </div>
+
+    <div class="log-page__table-container">
+        <table class="data-table">
             <thead>
                 <tr>
                     <th>Именинник</th>
@@ -46,17 +48,22 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- for цикл для того, чтобы проверять, если есть именинник с работой - добавляет. Скорее всего лучше делать по id работы, но не уверена  -->
+                <!-- Пример: for цикл для вывода работ -->
                 <tr>
-                    <td>Имечко красивое</td>
+                    <td>Имечко Красивое</td>
                     <td>14.05.2024</td>
-                    <td>текст</td>
-                    <td>Пельмень обыкновенный</td>
+                    <td>Текст</td>
+                    <td>Пельмень Обыкновенный</td>
+                </tr>
+                <tr>
+                    <td>Другой Именинник</td>
+                    <td>10.03.2024</td>
+                    <td>Арт</td>
+                    <td>Художник Неизвестный</td>
                 </tr>
                 <!-- конец for -->
             </tbody>
         </table>
     </div>
-    </div>
-</body>
-</html>
+</div>
+{% endblock page_content %}

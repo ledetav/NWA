@@ -1,0 +1,90 @@
+.log-page {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    &__filter {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Адаптивные колонки для фильтров
+        gap: 20px;
+        padding: 20px;
+        border-radius: $border-radius-medium;
+        background-color: lighten($bg-color, 2%);
+        box-shadow: 0 2px 5px rgba($dark-shadow-color, 0.1);
+
+        .filter__title {
+            grid-column: 1 / -1; // Заголовок на всю ширину
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: darken($text-color, 10%);
+            margin-bottom: 10px;
+        }
+
+        .filter__group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter__label {
+            font-weight: 500;
+            color: darken($text-color, 5%);
+        }
+
+        .filter__select {
+            padding: 10px 15px;
+            border-radius: $border-radius-small;
+            border: 1px solid darken($dark-shadow-color, 5%);
+            background-color: $bg-color;
+            color: $text-color;
+            width: 100%; // Растягиваем селект на всю ширину группы
+            &:focus {
+              outline: none;
+              border-color: $link-color;
+              box-shadow: 0 0 0 2px rgba($link-color, 0.2);
+            }
+        }
+
+        .filter__action {
+            display: flex;
+            align-items: flex-end; // Кнопка будет внизу, если высота группы больше
+            .button { // Используем существующий класс .button
+                width: 100%; // Кнопка на всю ширину контейнера действия
+            }
+        }
+    }
+
+    &__table-container {
+        width: 100%;
+        overflow-x: auto; // Для горизонтальной прокрутки на маленьких экранах
+    }
+
+    .data-table { // Общие стили для таблиц данных
+        width: 100%;
+        min-width: 600px; // Минимальная ширина таблицы перед появлением прокрутки
+        border-collapse: collapse;
+        
+        th, td {
+            padding: 12px 15px;
+            word-wrap: break-word;
+            text-align: center; // Как было в оригинале
+            border: 1px solid darken($bg-color, 12%);
+        }
+
+        th {
+            background-color: darken($bg-color, 6%);
+            font-weight: 600;
+            color: darken($text-color, 15%);
+        }
+
+        tbody tr {
+            &:nth-child(even) {
+                background-color: darken($bg-color, 2%);
+            }
+            &:hover {
+                background-color: darken($bg-color, 5%);
+            }
+        }
+    }
+}
