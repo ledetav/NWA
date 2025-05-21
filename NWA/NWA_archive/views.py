@@ -21,6 +21,16 @@ def main_page_view(request):
         position = moderator.moderator_position
     except Moderators.DoesNotExist:
         position = None
+    
+    try:
+        moderator = get_object_or_404(Moderators, pk=moderator_id)
+        cat_id = moderator.nw_ID.cat_id  #Получаем cat_id из NorthernWarmers, связанного с модератором.
+
+    except Moderators.DoesNotExist:
+        #Обработка, если id не верен.
+        cat_id = 558107 #Или возвращаем ошибку 404. Либо выводим сообщение на HTML.
+    except Exception as e:
+        cat_id = 558107
 
     context = {
         'blog_count': blog_count,
@@ -29,7 +39,8 @@ def main_page_view(request):
         'code_count': code_count,
         'name': name,
         'position': position,
-        'moderator_id': moderator_id
+        'moderator_id': moderator_id,
+        'cat_id': cat_id
     }
     return render(request, 'index.html', context)
 
