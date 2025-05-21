@@ -10,12 +10,10 @@
         <div class="filter__group">
             <label class="filter__label" for="type-work-select">Выберите тип работы:</label>
             <select class="filter__select" id="type-work-select" name="type-work">
-                <!-- Пример: цикл for по id типа работ -->
                 <option value="all">Все типы</option>
                 <option value="art">Арт</option>
                 <option value="text">Текст</option>
                 <option value="code">Код</option>
-                <!-- конец цикла for -->
             </select>
         </div>
         <div class="filter__action">
@@ -25,11 +23,10 @@
         <div class="filter__group">
             <label class="filter__label" for="celebrant-select">Выберите именинника:</label>
             <select class="filter__select" id="celebrant-select" name="celebrant-name">
-                <!-- Пример: цикл for по id именинников -->
-                <option value="all">Все именинники</option>
-                <option value="ivanov">Иванов Иван</option>
-                <option value="petrov">Петров Петр</option>
-                <!-- конец цикла for -->
+                {% for row in blogs %}
+                <option value="all">{{ row.celebrant_name }}</option>
+                <!-- здеся нужно будет фильтр впихнуть каким то раком -->
+                {% endfor %}
             </select>
         </div>
         <div class="filter__action">
