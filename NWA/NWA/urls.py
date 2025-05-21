@@ -24,5 +24,5 @@ urlpatterns = [
     path('test/', views.test_page_view),
     path('', views.main_page_view),
     path('log/', views.log_page_view),
-    path('*/', views.modal_window),
+    path('modal/', views.modal_window),
 ]

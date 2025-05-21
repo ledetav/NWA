@@ -1,7 +1,7 @@
 {% load static %}
 {% load sass_tags %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="page">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,33 +9,38 @@
     <link href="{% sass_src 'scss/global_styles.scss' %}" rel="stylesheet" type="text/css" />
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <div class="page-wrapper">
-        <header class="site-header">
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="/" class="nav-link">Главная</a></li>
-                    <li><a href="/log" class="nav-link">Лог работ</a></li>
+<body class="page__body">
+    <div class="page__inner-wrapper">
+        <header class="header page__header">
+            <nav class="header__nav header__nav--neumorphic-bar">
+                <a href="/" class="header__nav-link header__nav-link--home-icon" title="На главную">
+                    <img src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78" alt="Главная" class="header__home-icon-img">
+                </a>
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/log" class="header__nav-link">Лог работ</a>
+                    </li>
                 </ul>
             </nav>
         </header>
 
-        <main class="content-area">
-            <div class="neumorphic-window">
+        <main class="main page__main">
+            <div class="main__window main__window--neumorphic">
                 {% block page_content %}
                 {% endblock page_content %}
+                
+                {% block modal_block %}
+                {% endblock modal_block %}
+            
+                {% block scripts_block %}
+                {% endblock scripts_block %}
             </div>
         </main>
 
-        <footer class="site-footer">
-            <p>©{% now "Y" %} Горемычный Смехотворец [1546471] и Пламенеющая [1615439]. Все права защищены.</p>
+        <footer class="footer page__footer">
+            <p class="footer__text">©{% now "Y" %} Горемычный Смехотворец [1546471] и Пламенеющая [1615439]. Все права защищены.</p>
         </footer>
     </div>
-
-    {% block modal_block %}
-    {% endblock modal_block %}
-
-    {% block scripts_block %}
-    {% endblock scripts_block %}
+    <script src="{% static 'js/fontawesome.js' %}"></script>
 </body>
 </html>
