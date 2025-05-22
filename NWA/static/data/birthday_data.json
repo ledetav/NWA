@@ -1,0 +1,162 @@
+[
+    {
+      "id": 1,
+      "name": "Тарталья (Классик)",
+      "cat_id": 11011,
+      "birthday_date": "2024-07-20",
+      "information": "Одиннадцатый Предвестник Фатуи. Эта битва будет легендарной!",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 2,
+      "name": "Чайльд (Продавец Игрушек)",
+      "cat_id": 60065,
+      "birthday_date": "2024-03-15",
+      "information": "Просто дружелюбный парень из Снежной, продавец игрушек. Ничего подозрительного.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_1.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 3,
+      "name": "Аякс (Мальчик из Морепеска)",
+      "cat_id": 73827,
+      "birthday_date": "2024-01-25",
+      "information": "Когда-то он был просто Аяксом. До того, как всё стало... сложнее.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_13.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 4,
+      "name": "Торт Талья / Тортеллини",
+      "cat_id": 72782,
+      "birthday_date": "2024-05-05",
+      "information": "Вкусная паста или грозный Предвестник? Главное – не перепутать на кухне.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_20.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 5,
+      "name": "Мистер \"Весь Мир\"",
+      "cat_id": 10001,
+      "birthday_date": "2024-09-10",
+      "information": "От Ли Юэ до Инадзумы, он везде найдет приключения (и долги Чжун Ли).",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_6.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 6,
+      "name": "Кошелёк-кун",
+      "cat_id": 40404,
+      "birthday_date": "2024-11-22",
+      "information": "Вечно спонсирует чьи-то (обычно Чжун Ли) экстравагантные покупки.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_10.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 7,
+      "name": "Гидро Архонт (самопровозглашенный)",
+      "cat_id": 77777,
+      "birthday_date": "2024-02-14",
+      "information": "Столько воды, что Фурина могла бы позавидовать... почти.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_18.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 8,
+      "name": "Эд Ширан (версия Геншин)",
+      "cat_id": 30303,
+      "birthday_date": "2024-06-01",
+      "information": "Рыжий, талантливый и неожиданно хорош с луком. И немного опасен.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_22.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 9,
+      "name": "Охотник за Острыми Ощущениями",
+      "cat_id": 66600,
+      "birthday_date": "2024-08-08",
+      "information": "Если нет опасности, какой в этом смысл?",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_7.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 10,
+      "name": "Лучший Старший Брат (для Тевкра)",
+      "cat_id": 73828,
+      "birthday_date": "2024-12-01",
+      "information": "Готов на всё ради младшего брата... даже врать про Мистера Циклопа.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_16.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 11,
+      "name": "Повелитель Нарвалов",
+      "cat_id": 58585,
+      "birthday_date": "2024-04-01",
+      "information": "У него есть гигантский космический кит. А чего добился ты?",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_15.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 12,
+      "name": "Мастер Отливов и Приливов",
+      "cat_id": 20202,
+      "birthday_date": "2024-10-10",
+      "information": "Помечает врагов Отливом просто ради веселья (и немного урона).",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_21.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 13,
+      "name": "Форма \"Наследие Зла\"",
+      "cat_id": 99999,
+      "birthday_date": "2024-10-31",
+      "information": "Лучше не доводить его до этого. Серьезно.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_8.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 14,
+      "name": "Любитель Семейных Ужинов",
+      "cat_id": 12345,
+      "birthday_date": "2024-09-25",
+      "information": "Несмотря на всё, ценит свою семью. И вкусную еду.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_19.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 15,
+      "name": "Коллекционер Долгов (для Чжун Ли)",
+      "cat_id": 67890,
+      "birthday_date": "2024-04-20",
+      "information": "Однажды он всё-таки заставит Гео Архонта заплатить по счетам... Может быть.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_5.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 16,
+      "name": "Тарталетка",
+      "cat_id": 75342,
+      "birthday_date": "2024-02-28",
+      "information": "Маленький, но очень опасный десерт.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_3.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 17,
+      "name": "Мастер Скрытности (нет)",
+      "cat_id": 13579,
+      "birthday_date": "2024-08-25",
+      "information": "Пытается быть незаметным, но его боевой клич слышно за километр.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_9.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 18,
+      "name": "Снежный Дипломат",
+      "cat_id": 97531,
+      "birthday_date": "2024-11-05",
+      "information": "Его методы дипломатии включают много... очень убедительных аргументов.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_12.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 19,
+      "name": "Тот Самый Рыжик",
+      "cat_id": 70707,
+      "birthday_date": "2024-06-20",
+      "information": "В Снежной много рыжих, но этот – особенный (и особенно проблемный).",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_4.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    },
+    {
+      "id": 20,
+      "name": "Похититель Сердец (и Моры)",
+      "cat_id": 24680,
+      "birthday_date": "2024-12-24",
+      "information": "Обаятелен, опасен, и ваш кошелек может пострадать.",
+      "image": "https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_17.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+    }
+  ]
