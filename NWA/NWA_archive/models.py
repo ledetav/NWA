@@ -1,12 +1,14 @@
 from django.db import models
 
+class NorthernWarmers(models.Model):
+    cat_id = models.IntegerField(default=0)
+    nw_name = models.CharField(max_length=30)
+    nw_join_date = models.DateField()
+
 class Moderators(models.Model):
     moderator_position = models.CharField(max_length=100)
     moderator_shedule = models.CharField(max_length=100)
-
-class NorthernWarmers(models.Model):
-    nw_name = models.CharField(max_length=30)
-    nw_join_date = models.DateField()
+    nw_ID = models.ForeignKey(NorthernWarmers, on_delete=models.CASCADE, default=1)
 
 class Blogs(models.Model):
     moderator_id = models.ForeignKey(Moderators, on_delete=models.CASCADE)

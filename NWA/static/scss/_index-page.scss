@@ -1,3 +1,5 @@
+@use 'global_styles' as *;
+
 .index-page {
     &__grid {
         display: grid;
@@ -127,7 +129,6 @@
         }
     }
 
-
     .calendar { // Основной контейнер календаря
         display: flex;
         flex-direction: column;
@@ -240,66 +241,143 @@
         flex-direction: column;
         gap: 20px;
         align-items: center; // Центрируем карточку модератора
+    }
 
-        .moderator-item {
-            padding: 20px;
-            background-color: $bg-color;
-            border-radius: $border-radius-medium; // Более скругленные углы
-            border: 1px solid darken($bg-color, 7%);
-            text-align: center;
-            max-width: 300px; // Ограничим ширину карточки
-            width: 100%;
-            box-shadow: 0 3px 7px rgba($dark-shadow-color, 0.15);
+    .moderator-item {
+        padding: 20px;
+        background-color: $bg-color;
+        border-radius: $border-radius-medium; // Более скругленные углы
+        border: 1px solid darken($bg-color, 7%);
+        text-align: center;
+        max-width: 400px; // Ограничим ширину карточки
+        width: 100%;
+        box-shadow: 0 3px 7px rgba($dark-shadow-color, 0.15);
 
-            &__avatar { // Для аватара модератора (как на макете)
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                background-color: $dark-shadow-color; // Placeholder
-                margin: 0 auto 15px auto;
-                // Если <img>: img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 3em; color: $bg-color; // Для иконки-плейсхолдера
-                overflow: hidden;
-            }
+        &__avatar { // Для аватара модератора
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: $dark-shadow-color; // Placeholder
+            margin: 0 auto 15px auto;
+            // Если <img>: img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em; color: $bg-color; // Для иконки-плейсхолдера
+            overflow: hidden;
+        }
 
-            &__name {
-                font-weight: bold;
-                font-size: 1.2em;
-                margin-bottom: 5px;
-            }
-            &__role {
-                font-style: italic;
-                margin-bottom: 15px;
-                color: darken($text-color, 5%);
-                font-size: 0.95em;
-            }
-            &__links {
-                display: flex;
-                justify-content: center;
-                gap: 15px; // Промежуток между кнопками
-                a { // Стилизуем ссылки как кнопки
-                    color: $link-color;
-                    text-decoration: none;
-                    font-weight: 500;
-                    padding: 8px 15px;
-                    border-radius: $border-radius-small;
-                    background-color: darken($bg-color, 5%);
-                    border: 1px solid darken($bg-color, 10%);
-                    transition: all 0.2s ease;
-                    &:hover {
-                        background-color: darken($bg-color, 10%);
-                        border-color: darken($bg-color, 20%);
-                        color: $link-hover-color;
-                    }
+        &__name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        &__role {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: darken($text-color, 5%);
+            font-size: 0.95em;
+        }
+        &__links {
+            display: flex;
+            justify-content: center;
+            gap: 15px; // Промежуток между кнопками
+            a { // Стилизуем ссылки как кнопки
+                color: $link-color;
+                text-decoration: none;
+                font-weight: 500;
+                padding: 8px 15px;
+                border-radius: $border-radius-small;
+                background-color: darken($bg-color, 5%);
+                border: 1px solid darken($bg-color, 10%);
+                transition: all 0.2s ease;
+                &:hover {
+                    background-color: darken($bg-color, 10%);
+                    border-color: darken($bg-color, 20%);
+                    color: $link-hover-color;
                 }
             }
         }
     }
-    // Примечание: "Автоматическая карусель с артами" сбоку от "Ответственные"
-    // потребует дополнительной разметки и JS. Пока этот блок не реализован.
-    // Можно было бы сделать грид из двух колонок внутри секции "Ответственные",
-    // если карусель должна быть на одном уровне.
+
+    .moderators-carousel-wrapper { // Обертка для карусели и точек
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .moderators-carousel { // Сам блок карусели
+            position: relative;
+            width: 100%;
+            max-width: 400px; // Максимальная ширина карусели
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px; // Отступ между каруселью и точками
+
+            &__viewport {
+                width: 100%;
+                overflow: hidden;
+                margin: 0 15px; 
+            }
+
+            &__track {
+                display: flex;
+                transition: transform 0.4s ease-in-out;
+            }
+
+            &__btn {
+                background-color: darken($bg-color, 5%);
+                border: 1px solid darken($bg-color, 10%);
+                color: $text-color;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                font-size: 1.4em;
+                line-height: 1;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.2s ease, opacity 0.2s ease;
+                flex-shrink: 0;
+
+                &:hover:not(:disabled) {
+                    background-color: darken($bg-color, 10%);
+                }
+
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+            }
+            
+            // Стили для .moderator-item, когда он является слайдом внутри карусели
+            .moderator-item { 
+                flex: 0 0 100%; // Каждый слайд занимает 100% ширины ВЬЮПОРТА
+                box-sizing: border-box;
+                margin: 0; // Убираем внешние отступы у слайда, т.к. он внутри трека
+            }
+        }
+
+        // Стили для контейнера точек
+        .moderators-carousel__dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 0; // Небольшой отступ для области точек
+    
+            .moderators-carousel__dot { // Стили для отдельной точки
+                background-color: darken($bg-color, 15%);
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin: 0 5px; // Промежуток между точками
+                transition: background-color 0.3s ease, transform 0.2s ease;
+    
+                &--active {
+                    background-color: $link-color; 
+                    transform: scale(1.2); // Небольшое увеличение для активной точки
+                }
+            }
+        }
+    }
 }

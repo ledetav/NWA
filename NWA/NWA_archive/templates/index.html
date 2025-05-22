@@ -9,41 +9,19 @@
         <section class="index-page__section index-page__section--upcoming-birthdays">
             <h2 class="index-page__section-title">Ближайшие именинники</h2>
             <div class="upcoming-birthdays__list">
-                <!-- Пример именинника -->
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">15 мая</div>
-                    <div class="upcoming-birthdays__avatar">
-                        <i class="fa-solid fa-cat"></i>
-                    </div>
-                    <div class="upcoming-birthdays__name">Лапоух</div>
-                </div>
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">25 мая</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Бабуба</div>
-                </div>
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">5 июня</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Пощада</div>
-                </div>
-                 <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">10 июня</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Нервотрепка</div>
-                </div>
+                <p class="upcoming-birthdays__loading">Загрузка именинников...</p>
             </div>
         </section>
 
         <section class="index-page__section index-page__section--statistics">
             <h2 class="index-page__section-title">Было создано</h2>
             <div class="statistics-details">
-                <div class="statistics-details__total-blogs">106</div>
+                <div class="statistics-details__total-blogs">{{ blog_count }}</div>
                 <div class="statistics-details__total-blogs-label">блогов</div>
                 <div class="statistics-details__breakdown-title">в них:</div>
-                <div class="statistics-details__breakdown-item"><span>568</span> рисунков</div>
-                <div class="statistics-details__breakdown-item"><span>24568</span> слов</div>
-                <div class="statistics-details__breakdown-item"><span>40618</span> строк кода</div>
+                <div class="statistics-details__breakdown-item"><span>{{ art_count }}</span> рисунков</div>
+                <div class="statistics-details__breakdown-item"><span>{{ text_count }}</span> слов</div>
+                <div class="statistics-details__breakdown-item"><span>{{ code_count }}</span> строк кода</div>
             </div>
         </section>
 
@@ -51,12 +29,22 @@
             <h2 class="index-page__section-title">Календарь</h2>
             <div class="calendar">
                 <div class="calendar__header">
-                    <button id="Btn-back-calendar" title="Предыдущий месяц"><</button>
+                    <button id="Btn-back-calendar" title="Предыдущий месяц">
+                        <i class="fa-solid fa-arrow-left fa-xs"></i>
+                    </button>
                     <h3 id="monthYearDisplayCalendar">Месяц Год</h3>
-                    <button id="Btn-next-calendar" title="Следующий месяц">></button>
+                    <button id="Btn-next-calendar" title="Следующий месяц">
+                        <i class="fa-solid fa-arrow-right fa-xs"></i>
+                    </button>
                 </div>
                 <div class="calendar__weekdays">
-                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
                 </div>
                 <div class="calendar__days">
                 </div>
@@ -65,55 +53,132 @@
 
         <section class="index-page__section index-page__section--moderators">
             <h2 class="index-page__section-title">Ответственные</h2>
+            {% if moderators_list %}
+            <div class="moderators-carousel-wrapper"> {# Новый контейнер-обертка #}
+                <div class="moderators-carousel">
+                    <button class="moderators-carousel__btn moderators-carousel__btn--prev"
+                        aria-label="Предыдущий модератор" title="Предыдущий"><i class="fa-solid fa-arrow-left fa-xs"></i></button>
+                            <div class="moderators-carousel__viewport">
+                                <div class="moderators-carousel__track">
+                                    {% for moderator in moderators_list %}
+                                    <div class="moderator-item">
+                                        <div class="moderator-item__avatar">
+                                            <i
+                                                class="{{ moderator.avatar_icon_class|default:'fa-solid fa-user-secret' }}"></i>
+                                        </div>
+                                        <div class="moderator-item__name">{{ moderator.name }}</div>
+                                        <div class="moderator-item__role">{{ moderator.position }}</div>
+                                        <div class="moderator-item__links">
+                                            <a href="https://catwar.net/cat{{ moderator.cat_id }}">Вар</a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <button class="moderators-carousel__btn moderators-carousel__btn--next"
+                                aria-label="Следующий модератор" title="Следующий"><i class="fa-solid fa-arrow-right fa-xs"></i></button>
+                </div>
+                <div class="moderators-carousel__dots"></div>
+            </div>
+            {% else %}
             <div class="moderators-list">
                 <div class="moderator-item">
                     <div class="moderator-item__avatar">
-                        <i class="fa-solid fa-user-secret"></i>
+                        <i class="fa-solid fa-user-astronaut"></i>
                     </div>
-                    <div class="moderator-item__name">Горемычный Смехотворец</div>
-                    <div class="moderator-item__role">Ответственный за отряд</div>
-                    <div class="moderator-item__links">
-                        <a href="[ссылка_вар]">Вар</a>
-                        <a href="[ссылка_вк]">ВК</a>
-                    </div>
+                    <div class="moderator-item__name">Ответственные</div>
+                    <div class="moderator-item__role">Скоро будут здесь</div>
                 </div>
             </div>
+            {% endif %}
         </section>
     </div>
 </div>
 {% endblock page_content %}
 
 {% block scripts_block %}
-    {{ block.super }}
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const upcomingBirthdaysList = document.querySelector('.upcoming-birthdays__list');
+        const loadingMessage = document.querySelector('.upcoming-birthdays__loading');
+
         const monthYearDisplayCalendar = document.getElementById('monthYearDisplayCalendar');
-        const calendarDaysElement = document.querySelector('.index-page__section--calendar .calendar__days'); // Уточненный селектор
+        const calendarDaysElement = document.querySelector('.index-page__section--calendar .calendar__days');
         const prevCalendarBtn = document.getElementById('Btn-back-calendar');
         const nextCalendarBtn = document.getElementById('Btn-next-calendar');
 
-        if (!monthYearDisplayCalendar || !calendarDaysElement || !prevCalendarBtn || !nextCalendarBtn) {
-            console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
-        } else {
-            let calendarCurrentDate = new Date();
-            
-            const birthdaysData = {
-                [new Date().getFullYear()]: { // Текущий год
-                    [new Date().getMonth() + 1]: [2, 15, 23] // Дни рождения в текущем месяце (2, 15, 23 число)
-                },
-            };
+        let allBirthdays = [];
 
+        function formatDateForDisplay(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+        }
+
+        function displayUpcomingBirthdays(birthdays) {
+            if (loadingMessage) upcomingBirthdaysList.innerHTML = '';
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const upcoming = birthdays
+                .map(person => ({
+                    ...person,
+                    dateObject: new Date(person.birthday_date)
+                }))
+                .map(person => {
+                    let birthdayThisYear = new Date(person.dateObject);
+                    birthdayThisYear.setFullYear(today.getFullYear());
+                    if (birthdayThisYear < today) {
+                        birthdayThisYear.setFullYear(today.getFullYear() + 1);
+                    }
+                    return { ...person, nextBirthday: birthdayThisYear };
+                })
+                .sort((a, b) => a.nextBirthday - b.nextBirthday)
+                .slice(0, 4);
+
+            if (upcoming.length === 0) {
+                upcomingBirthdaysList.innerHTML = '<p>Нет ближайших именинников.</p>';
+                return;
+            }
+
+            upcoming.forEach(person => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('upcoming-birthdays__item');
+                itemDiv.innerHTML = `
+                    <div class="upcoming-birthdays__date">${formatDateForDisplay(person.nextBirthday)}</div>
+                    <div class="upcoming-birthdays__avatar">
+                        <img src="${person.image}" alt="${person.name}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                    </div>
+                    <div class="upcoming-birthdays__name">${person.name}</div>
+                `;
+                upcomingBirthdaysList.appendChild(itemDiv);
+            });
+        }
+
+        try {
+            const response = await fetch("{% static 'data/birthdays_data.json' %}");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            allBirthdays = await response.json();
+            displayUpcomingBirthdays(allBirthdays);
+        } catch (error) {
+            console.error("Could not load birthdays data:", error);
+            if (loadingMessage) upcomingBirthdaysList.innerHTML = '<p>Не удалось загрузить именинников.</p>';
+            if (calendarDaysElement) calendarDaysElement.innerHTML = '<p>Не удалось загрузить данные для календаря.</p>';
+        }
+
+        if (monthYearDisplayCalendar && calendarDaysElement && prevCalendarBtn && nextCalendarBtn) {
+            let calendarCurrentDate = new Date();
             function renderOldCalendar() {
                 const year = calendarCurrentDate.getFullYear();
-                const month = calendarCurrentDate.getMonth(); // 0-11
-
+                const month = calendarCurrentDate.getMonth();
                 monthYearDisplayCalendar.textContent = `${calendarCurrentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
                 calendarDaysElement.innerHTML = '';
-
                 const firstDayOfMonth = new Date(year, month, 1);
                 const lastDayOfMonth = new Date(year, month + 1, 0);
-                
-                const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // 0 (Пн) - 6 (Вс)
+                const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
                 const totalDaysInMonth = lastDayOfMonth.getDate();
 
                 for (let i = 0; i < firstDayOfWeek; i++) {
@@ -126,32 +191,149 @@
                 for (let i = 1; i <= totalDaysInMonth; i++) {
                     const dayCell = document.createElement('div');
                     dayCell.textContent = i;
-                    dayCell.dataset.day = i;
-                    dayCell.dataset.month = month + 1;
-                    dayCell.dataset.year = year;
-
+                    dayCell.dataset.day = i; dayCell.dataset.month = month + 1; dayCell.dataset.year = year;
                     if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                         dayCell.classList.add('today');
                     }
-                    if (birthdaysData[year] && birthdaysData[year][month + 1] && birthdaysData[year][month + 1].includes(i)) {
+                    const birthdaysInThisMonth = allBirthdays.filter(b => {
+                        const bDate = new Date(b.birthday_date);
+                        return bDate.getMonth() === month && bDate.getDate() === i;
+                    });
+                    if (birthdaysInThisMonth.length > 0) {
                         dayCell.classList.add('has-birthday');
+                        dayCell.title = birthdaysInThisMonth.map(p => p.name).join(', ');
                     }
                     calendarDaysElement.appendChild(dayCell);
                 }
             }
-
             prevCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
                 renderOldCalendar();
             });
-
             nextCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + 1);
                 renderOldCalendar();
             });
-            
-            renderOldCalendar();
+            if (allBirthdays.length > 0 || "{% static 'data/birthdays_data.json' %}") { // Рендерим календарь, если есть данные или они должны были загрузиться
+                renderOldCalendar();
+            }
+        } else {
+            console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
+        }
+
+// --- Логика для карусели модераторов ---
+const moderatorsCarouselWrapper = document.querySelector('.moderators-carousel-wrapper');
+        if (moderatorsCarouselWrapper) {
+            const moderatorsCarouselElem = moderatorsCarouselWrapper.querySelector('.moderators-carousel');
+            const track = moderatorsCarouselElem.querySelector('.moderators-carousel__track');
+            const slides = Array.from(track.children);
+            const nextButton = moderatorsCarouselElem.querySelector('.moderators-carousel__btn--next');
+            const prevButton = moderatorsCarouselElem.querySelector('.moderators-carousel__btn--prev');
+            const dotsNav = moderatorsCarouselWrapper.querySelector('.moderators-carousel__dots');
+
+            let currentIndex = 0;
+            let autoPlayInterval; // Для хранения ID интервала автопрокрутки
+            const autoPlayDelay = 5000; // 5 секунд
+
+            if (slides.length > 0) {
+                // --- Создание точек-индикаторов
+                const dots = [];
+                if (dotsNav && slides.length > 1) {
+                    slides.forEach((slide, index) => {
+                        const dotIndicator = document.createElement('div');
+                        dotIndicator.classList.add('moderators-carousel__dot');
+                        if (index === 0) {
+                            dotIndicator.classList.add('moderators-carousel__dot--active');
+                        }
+                        dotsNav.appendChild(dotIndicator);
+                        dots.push(dotIndicator);
+                    });
+                } else if (dotsNav) {
+                    dotsNav.style.display = 'none';
+                }
+
+                const updateButtonStatesAndDots = () => {
+                    if (slides.length <= 1) { // Если слайд один, кнопки и точки не нужны
+                         if (prevButton) prevButton.style.display = 'none';
+                         if (nextButton) nextButton.style.display = 'none';
+                         if (dotsNav) dotsNav.style.display = 'none';
+                         return;
+                    }
+                    if (prevButton) prevButton.disabled = currentIndex === 0;
+                    if (nextButton) nextButton.disabled = currentIndex === slides.length - 1;
+
+                    if (dots.length > 0) {
+                        dots.forEach(dot => dot.classList.remove('moderators-carousel__dot--active'));
+                        if (dots[currentIndex]) {
+                            dots[currentIndex].classList.add('moderators-carousel__dot--active');
+                        }
+                    }
+                };
+
+                const moveToSlide = (index) => {
+                    if (index < 0 || index >= slides.length) return;
+                    
+                    // Убедимся, что slideWidth актуальна, особенно если слайды могут иметь разную ширину или подгружаться
+                    const currentSlideWidth = slides[index] ? slides[index].offsetWidth : (slides[0] ? slides[0].offsetWidth : 0);
+                    if (currentSlideWidth === 0 && slides.length > 0) { // Если ширина не определена, пробуем еще раз или используем ширину трека/вьюпорта
+                        const viewportWidth = track.parentElement.offsetWidth;
+                         track.style.transform = `translateX(-${index * viewportWidth}px)`;
+                    } else {
+                         track.style.transform = `translateX(-${index * currentSlideWidth}px)`;
+                    }
+                    currentIndex = index;
+                    updateButtonStatesAndDots();
+                };
+
+                // --- Функции автопрокрутки ---
+                const startAutoPlay = () => {
+                    stopAutoPlay();
+                    if (slides.length > 1) {
+                        autoPlayInterval = setInterval(() => {
+                            let nextIndex = currentIndex + 1;
+                            if (nextIndex >= slides.length) {
+                                nextIndex = 0;
+                            }
+                            moveToSlide(nextIndex);
+                        }, autoPlayDelay);
+                    }
+                };
+
+                const stopAutoPlay = () => {
+                    clearInterval(autoPlayInterval);
+                };
+
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        stopAutoPlay();
+                        moveToSlide(currentIndex + 1);
+                        startAutoPlay();
+                    });
+                }
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        stopAutoPlay();
+                        moveToSlide(currentIndex - 1);
+                        startAutoPlay();
+                    });
+                }
+
+                moderatorsCarouselElem.addEventListener('mouseenter', stopAutoPlay);
+                moderatorsCarouselElem.addEventListener('mouseleave', startAutoPlay);
+                
+                updateButtonStatesAndDots();
+                if (slides.length > 1) {
+                    startAutoPlay();
+                }
+
+
+            } else { 
+                if (nextButton) nextButton.style.display = 'none';
+                if (prevButton) prevButton.style.display = 'none';
+                if (dotsNav) dotsNav.style.display = 'none';
+            }
         }
     });
-    </script>
+</script>
 {% endblock scripts_block %}
