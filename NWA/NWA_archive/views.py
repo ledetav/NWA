@@ -47,54 +47,67 @@ def main_page_view(request):
 
 def log_page_view(request):
     celebrant_name = request.GET.get('celebrant_name', '')
+    selected_work_type = request.GET.get('type_work', 'all')
+
     all_works = []
 
+    # Фильтруем Art, Text
+    arts = NWAArchiveArts.objects.all()
+    texts = NWAArchiveTexts.objects.all()
+
+    if selected_work_type != 'all':
+        arts = arts.filter(work_type=int(selected_work_type))
+        texts = texts.filter(work_type=int(selected_work_type))
+
     if celebrant_name:
-        # Используем Q-объекты для поиска без учета регистра
-        q_filter = Q(blog_id__celebrant_name__icontains=celebrant_name) | Q(celebrant_name__icontains=celebrant_name)
+        arts = arts.filter(blog_id__celebrant_name__icontains=celebrant_name)
+        texts = texts.filter(blog_id__celebrant_name__icontains=celebrant_name)
 
-        arts = NWAArchiveArts.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
-        texts = NWAArchiveTexts.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
-        codes = NWAArchiveCodes.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
-        blogs = Blogs.objects.filter(celebrant_name__icontains=celebrant_name)
-    else:
-        arts = NWAArchiveArts.objects.all()
-        texts = NWAArchiveTexts.objects.all()
-        codes = NWAArchiveCodes.objects.all()
-        blogs = Blogs.objects.all()
+    # Фильтруем Codes (без work_type)
+    codes = NWAArchiveCodes.objects.all()
+    if celebrant_name:
+        codes = codes.filter(blog_id__celebrant_name__icontains=celebrant_name)
 
+    # Фильтруем Blogs
+    blogs = Blogs.objects.all()
+    if celebrant_name:
+        blogs = blogs.filter(celebrant_name__icontains=celebrant_name)
+
+    # Добавляем информацию из NWAArchiveArts
     for art in arts:
         all_works.append({
             'celebrant_name': art.blog_id.celebrant_name,
             'birthday_date': art.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Art',
+            'work_type': get_work_type_display(art.work_type),
             'nw_name': art.nw_ID.nw_name,
             'work_date': art.work_publication_date,
         })
 
+    # Добавляем информацию из NWAArchiveTexts
     for text in texts:
         all_works.append({
             'celebrant_name': text.blog_id.celebrant_name,
             'birthday_date': text.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Text',
+            'work_type': get_work_type_display(text.work_type),
             'nw_name': text.nw_ID.nw_name,
             'work_date': text.work_publication_date,
         })
 
+    # Добавляем информацию из NWAArchiveCodes
     for code in codes:
         all_works.append({
             'celebrant_name': code.blog_id.celebrant_name,
             'birthday_date': code.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Code',
+            'work_type': 'Code', # или любое другое значение по умолчанию
             'nw_name': code.nw_ID.nw_name,
             'work_date': code.work_publication_date,
         })
-    
+
     for blog in blogs:
         all_works.append({
             'celebrant_name': blog.celebrant_name,
             'birthday_date': blog.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Blog',
+            'work_type': 'Blog',  # No type in model
             'nw_name': blog.moderator_id.nw_ID.nw_name,
             'work_date': None,
         })
@@ -102,8 +115,29 @@ def log_page_view(request):
     context = {
         'blogs': all_works,
         'celebrant_name': celebrant_name,
+        'work_type_choices': get_work_type_choices(),
+        'selected_work_type': selected_work_type,
     }
     return render(request, 'log.html', context)
+
+
+def get_work_type_choices():
+    """Hardcoded list of work types, replace if your source changes"""
+    return [
+        ('all', 'Все типы'),
+        ('0', 'Арт'),
+        ('1', 'Текст'),
+        ('2', 'Код'),
+    ]
+
+
+def get_work_type_display(work_type):
+    """Get display name for work type integer"""
+    work_type = str(work_type)
+    for value, display_name in get_work_type_choices():
+        if value == work_type:
+            return display_name
+    return "Unknown"
 
 def test_page_view(request):
     return render(request, 'test.html')
