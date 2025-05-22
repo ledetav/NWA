@@ -34,6 +34,7 @@
                     <th>Тип работы</th>
                     <th>Даритель</th>
                     <th>Дата публикации</th>
+                    <th>Посмотреть информацию</th>
                 </tr>
             </thead>
             <tbody>
@@ -51,6 +52,16 @@
                     <td>{{ row.work_type_display }}</td>
                     <td>{{ row.nw_name }}</td>
                     <td>{{ row.work_date }}</td>
+                    <td>
+                        <button class="button button--text js-open-modal-btn"
+                               data-celebrant-name="{{ row.celebrant_name }}"
+                               data-birthday-date="{{ row.birthday_date }}"
+                               data-work-type="{{ row.work_type }}"
+                               data-nw-name="{{ row.nw_name }}"
+                               data-work-date="{{ row.work_date }}">
+                           Информация
+                       </button>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
