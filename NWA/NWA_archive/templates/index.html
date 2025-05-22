@@ -9,29 +9,8 @@
         <section class="index-page__section index-page__section--upcoming-birthdays">
             <h2 class="index-page__section-title">Ближайшие именинники</h2>
             <div class="upcoming-birthdays__list">
-                <!-- Пример именинника -->
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">15 мая</div>
-                    <div class="upcoming-birthdays__avatar">
-                        <i class="fa-solid fa-cat"></i>
-                    </div>
-                    <div class="upcoming-birthdays__name">Лапоух</div>
-                </div>
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">25 мая</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Бабуба</div>
-                </div>
-                <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">5 июня</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Пощада</div>
-                </div>
-                 <div class="upcoming-birthdays__item">
-                    <div class="upcoming-birthdays__date">10 июня</div>
-                    <div class="upcoming-birthdays__avatar"><i class="fa-solid fa-cat"></i></div>
-                    <div class="upcoming-birthdays__name">Нервотрепка</div>
-                </div>
+                <!-- Сюда будут динамически добавляться именинники -->
+                <p class="upcoming-birthdays__loading">Загрузка именинников...</p>
             </div>
         </section>
 
@@ -51,14 +30,22 @@
             <h2 class="index-page__section-title">Календарь</h2>
             <div class="calendar">
                 <div class="calendar__header">
-                    <button id="Btn-back-calendar" title="Предыдущий месяц"><</button>
-                    <h3 id="monthYearDisplayCalendar">Месяц Год</h3>
-                    <button id="Btn-next-calendar" title="Следующий месяц">></button>
+                    <button id="Btn-back-calendar" title="Предыдущий месяц">
+                        << /button>
+                            <h3 id="monthYearDisplayCalendar">Месяц Год</h3>
+                            <button id="Btn-next-calendar" title="Следующий месяц">></button>
                 </div>
                 <div class="calendar__weekdays">
-                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
                 </div>
                 <div class="calendar__days">
+                    <!-- Сюда будут добавляться дни календаря -->
                 </div>
             </div>
         </section>
@@ -70,10 +57,10 @@
                     <div class="moderator-item__avatar">
                         <i class="fa-solid fa-user-secret"></i>
                     </div>
-                    <div class="moderator-item__name">{{ name }}</div>
-                    <div class="moderator-item__role">{{ position }}</div>
+                    <div class="moderator-item__name">{{ name|default:"Имя модератора" }}</div>
+                    <div class="moderator-item__role">{{ position|default:"Должность" }}</div>
                     <div class="moderator-item__links">
-                        <a href="https://catwar.net/cat{{ cat_id }}">Вар</a>
+                        <a href="https://catwar.net/cat{{ cat_id|default:'1' }}">Вар</a>
                     </div>
                 </div>
             </div>
@@ -83,35 +70,123 @@
 {% endblock page_content %}
 
 {% block scripts_block %}
-    {{ block.super }}
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
+{{ block.super }}
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const upcomingBirthdaysList = document.querySelector('.upcoming-birthdays__list');
+        const loadingMessage = document.querySelector('.upcoming-birthdays__loading');
+
         const monthYearDisplayCalendar = document.getElementById('monthYearDisplayCalendar');
-        const calendarDaysElement = document.querySelector('.index-page__section--calendar .calendar__days'); // Уточненный селектор
+        const calendarDaysElement = document.querySelector('.index-page__section--calendar .calendar__days');
         const prevCalendarBtn = document.getElementById('Btn-back-calendar');
         const nextCalendarBtn = document.getElementById('Btn-next-calendar');
 
+        let allBirthdays = []; // Здесь будут храниться все данные из JSON
+        let calendarBirthdaysData = {}; // Данные для календаря
+
+        // Функция для форматирования даты (например, "15 мая")
+        function formatDateForDisplay(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+        }
+
+        // Функция для отображения ближайших именинников
+        function displayUpcomingBirthdays(birthdays) {
+            if (loadingMessage) upcomingBirthdaysList.innerHTML = ''; // Очищаем сообщение "Загрузка..."
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Нормализуем для сравнения только дат
+
+            const upcoming = birthdays
+                .map(person => ({
+                    ...person,
+                    dateObject: new Date(person.birthday_date) // Преобразуем строку в дату
+                }))
+                .map(person => {
+                    // Устанавливаем текущий год для дня рождения для корректного сравнения
+                    let birthdayThisYear = new Date(person.dateObject);
+                    birthdayThisYear.setFullYear(today.getFullYear());
+                    if (birthdayThisYear < today) { // Если ДР в этом году уже прошел
+                        birthdayThisYear.setFullYear(today.getFullYear() + 1); // Берем ДР следующего года
+                    }
+                    return { ...person, nextBirthday: birthdayThisYear };
+                })
+                .sort((a, b) => a.nextBirthday - b.nextBirthday) // Сортируем по ближайшей дате
+                .slice(0, 4); // Берем первых 4
+
+            if (upcoming.length === 0) {
+                upcomingBirthdaysList.innerHTML = '<p>Нет ближайших именинников.</p>';
+                return;
+            }
+
+            upcoming.forEach(person => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('upcoming-birthdays__item');
+                itemDiv.innerHTML = `
+                    <div class="upcoming-birthdays__date">${formatDateForDisplay(person.nextBirthday)}</div>
+                    <div class="upcoming-birthdays__avatar">
+                        <img src="${person.image}" alt="${person.name}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                    </div>
+                    <div class="upcoming-birthdays__name">${person.name}</div>
+                `;
+                upcomingBirthdaysList.appendChild(itemDiv);
+            });
+        }
+
+        // Функция для подготовки данных для календаря
+        function prepareCalendarData(birthdays) {
+            const data = {};
+            birthdays.forEach(person => {
+                const date = new Date(person.birthday_date);
+                const year = date.getFullYear(); // Год из JSON
+                const month = date.getMonth() + 1; // 1-12
+                const day = date.getDate();
+
+                if (!data[month]) {
+                    data[month] = [];
+                }
+                if (!data[month].includes(day)) {
+                    data[month].push(day);
+                }
+            });
+            return data; // Возвращает { месяц: [дни] }
+        }
+
+        // Загрузка данных
+        try {
+            const response = await fetch("{% static 'data/birthdays_data.json' %}");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            allBirthdays = await response.json();
+
+            displayUpcomingBirthdays(allBirthdays);
+            // calendarBirthdaysData теперь будет формироваться динамически в renderCalendar
+            // на основе allBirthdays
+        } catch (error) {
+            console.error("Could not load birthdays data:", error);
+            if (loadingMessage) upcomingBirthdaysList.innerHTML = '<p>Не удалось загрузить именинников.</p>';
+            if (calendarDaysElement) calendarDaysElement.innerHTML = '<p>Не удалось загрузить данные для календаря.</p>';
+            return; // Прерываем выполнение, если данные не загружены
+        }
+
+        // --- Логика календаря ---
         if (!monthYearDisplayCalendar || !calendarDaysElement || !prevCalendarBtn || !nextCalendarBtn) {
             console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
         } else {
             let calendarCurrentDate = new Date();
-            
-            const birthdaysData = {
-                [new Date().getFullYear()]: { // Текущий год
-                    [new Date().getMonth() + 1]: [2, 15, 23] // Дни рождения в текущем месяце (2, 15, 23 число)
-                },
-            };
 
-            function renderOldCalendar() {
+            function renderCalendar() {
                 const year = calendarCurrentDate.getFullYear();
-                const month = calendarCurrentDate.getMonth(); // 0-11
+                const month = calendarCurrentDate.getMonth(); // 0-11 (январь-декабрь)
+                const monthForData = month + 1; // 1-12 для сверки с подготовленными данными
 
                 monthYearDisplayCalendar.textContent = `${calendarCurrentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
                 calendarDaysElement.innerHTML = '';
 
                 const firstDayOfMonth = new Date(year, month, 1);
                 const lastDayOfMonth = new Date(year, month + 1, 0);
-                
+
                 const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // 0 (Пн) - 6 (Вс)
                 const totalDaysInMonth = lastDayOfMonth.getDate();
 
@@ -132,8 +207,16 @@
                     if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                         dayCell.classList.add('today');
                     }
-                    if (birthdaysData[year] && birthdaysData[year][month + 1] && birthdaysData[year][month + 1].includes(i)) {
+
+                    // Проверяем, есть ли ДР в этот день этого месяца
+                    const birthdaysInThisMonth = allBirthdays.filter(b => {
+                        const bDate = new Date(b.birthday_date);
+                        return bDate.getMonth() === month && bDate.getDate() === i;
+                    });
+
+                    if (birthdaysInThisMonth.length > 0) {
                         dayCell.classList.add('has-birthday');
+                        dayCell.title = birthdaysInThisMonth.map(p => p.name).join(', ');
                     }
                     calendarDaysElement.appendChild(dayCell);
                 }
@@ -141,16 +224,16 @@
 
             prevCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
-                renderOldCalendar();
+                renderCalendar();
             });
 
             nextCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + 1);
-                renderOldCalendar();
+                renderCalendar();
             });
-            
-            renderOldCalendar();
+
+            renderCalendar(); // Первоначальный рендер календаря
         }
     });
-    </script>
+</script>
 {% endblock scripts_block %}
