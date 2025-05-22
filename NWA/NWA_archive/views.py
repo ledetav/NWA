@@ -20,39 +20,26 @@ def main_page_view(request):
     art_count = NWAArchiveArts.objects.count()  # Получаем количество строк
     text_count = NWAArchiveTexts.objects.count()  # Получаем количество строк
     code_count = NWAArchiveCodes.objects.count()  # Получаем количество строк
-    moderator_id = request.GET.get('moderator_id')  # Получаем id модератора из GET-параметра
-    try:
-        moderator = Moderators.objects.get(pk=moderator_id) # Получаем модератора по id
-        name = moderator.nw_ID.nw_name # Получаем nw_name
-        # Получаем один экземпляр NorthernWarmers
-    except Moderators.DoesNotExist:
-        name = None # Если не находим, то присваиваем значение None
 
-    try:
-        moderator = Moderators.objects.get(pk=moderator_id)
-        position = moderator.moderator_position
-    except Moderators.DoesNotExist:
-        position = None
-    
-    try:
-        moderator = get_object_or_404(Moderators, pk=moderator_id)
-        cat_id = moderator.nw_ID.cat_id  # Получаем cat_id из NorthernWarmers, связанного с модератором.
+    # Получаем всех модераторов и нужные данные
+    moderators_list_data = []
+    all_moderators = Moderators.objects.select_related('nw_ID').all() # Оптимизация запроса
 
-    except Moderators.DoesNotExist:
-        # Обработка, если id не верен.
-        cat_id = 558107 #Или возвращаем ошибку 404. Либо выводим сообщение на HTML.
-    except Exception as e:
-        cat_id = 558107
+    for mod in all_moderators:
+        moderators_list_data.append({
+            'id': mod.id,
+            'name': mod.nw_ID.nw_name,
+            'position': mod.moderator_position,
+            'cat_id': mod.nw_ID.cat_id,
+            'avatar_icon_class': 'fa-solid fa-user-secret' # Можно сделать это поле в модели Moderators, если аватарки разные
+        })
 
     context = {
         'blog_count': blog_count,
         'art_count': art_count,
         'text_count': text_count,
         'code_count': code_count,
-        'name': name,
-        'position': position,
-        'moderator_id': moderator_id,
-        'cat_id': cat_id
+        'moderators_list': moderators_list_data
     }
     return render(request, 'index.html', context)
 
