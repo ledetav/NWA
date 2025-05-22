@@ -30,7 +30,7 @@
             <thead>
                 <tr>
                     <th>Именинник</th>
-                    <th>Дата</th>
+                    <th>Дата ДР</th> {# Изменил для ясности, что это дата ДР именинника #}
                     <th>Тип работы</th>
                     <th>Даритель</th>
                     <th>Дата публикации</th>
@@ -38,7 +38,14 @@
             </thead>
             <tbody>
                 {% for row in blogs %}
-                <tr>
+                <tr class="js-log-entry-row" 
+                    data-celebrant-name="{{ row.celebrant_name }}"
+                    data-birthday-date="{{ row.birthday_date }}" {# Дата ДР #}
+                    data-work-type="{{ row.work_type_display }}"
+                    data-nw-name="{{ row.nw_name }}"
+                    data-publication-date="{{ row.work_date }}" {# Дата публикации работы #}
+                    style="cursor: pointer;"
+                    title="Нажмите для подробной информации">
                     <td>{{ row.celebrant_name }}</td>
                     <td>{{ row.birthday_date }}</td>
                     <td>{{ row.work_type_display }}</td>
@@ -64,11 +71,11 @@
         const typeWorkSelect = document.getElementById('type-work-select');
         const celebrantNameInput = document.getElementById('celebrant-name-input');
 
-        let debounceTimer; // Для задержки отправки формы при вводе текста
+        let debounceTimer;
 
         if (typeWorkSelect && filterForm) {
             typeWorkSelect.addEventListener('change', function () {
-                filterForm.submit(); // Отправляем форму при изменении select
+                filterForm.submit();
             });
         }
 
@@ -76,10 +83,48 @@
             celebrantNameInput.addEventListener('input', function () {
                 clearTimeout(debounceTimer);
                 debounceTimer = setTimeout(function () {
-                    filterForm.submit(); // Отправляем форму через 500мс после прекращения ввода
-                }, 500); 
+                    filterForm.submit();
+                }, 500);
             });
         }
+
+        // --- Логика для модального окна лога ---
+        const logEntryRows = document.querySelectorAll('.js-log-entry-row');
+
+        function showLogEntryModal(rowData) {
+            // rowData будет объектом с данными из data-атрибутов строки
+            // ЗАГЛУШКА: Формируем тело модального окна
+            let bodyContent = `
+                <div style="text-align: left;">
+                    <p><strong>Именинник:</strong> ${rowData.celebrantName}</p>
+                    <p><strong>Дата дня рождения именинника:</strong> ${rowData.birthdayDate}</p>
+                    <hr style="margin: 15px 0;">
+                    <p><strong>Тип работы:</strong> ${rowData.workType}</p>
+                    <p><strong>Даритель (автор работы):</strong> ${rowData.nwName}</p>
+                    <p><strong>Дата публикации работы:</strong> ${rowData.publicationDate}</p>
+                    <hr style="margin: 15px 0;">
+                </div>
+            `;
+
+            window.showCustomModal({
+                title: `Детали работы для: ${rowData.celebrantName}`,
+                bodyHtml: bodyContent,
+                footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Закрыть</button>`
+            });
+        }
+
+        logEntryRows.forEach(row => {
+            row.addEventListener('click', function() {
+                const rowData = {
+                    celebrantName: this.dataset.celebrantName,
+                    birthdayDate: this.dataset.birthdayDate,
+                    workType: this.dataset.workType,
+                    nwName: this.dataset.nwName,
+                    publicationDate: this.dataset.publicationDate
+                };
+                showLogEntryModal(rowData);
+            });
+        });
     });
     </script>
 {% endblock scripts_block %}
