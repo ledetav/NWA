@@ -221,8 +221,8 @@
             console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
         }
 
-        // --- Логика для карусели модераторов ---
-        const moderatorsCarouselWrapper = document.querySelector('.moderators-carousel-wrapper');
+// --- Логика для карусели модераторов ---
+const moderatorsCarouselWrapper = document.querySelector('.moderators-carousel-wrapper');
         if (moderatorsCarouselWrapper) {
             const moderatorsCarouselElem = moderatorsCarouselWrapper.querySelector('.moderators-carousel');
             const track = moderatorsCarouselElem.querySelector('.moderators-carousel__track');
@@ -231,10 +231,11 @@
             const prevButton = moderatorsCarouselElem.querySelector('.moderators-carousel__btn--prev');
             const dotsNav = moderatorsCarouselWrapper.querySelector('.moderators-carousel__dots');
 
-            if (slides.length > 0) {
-                let currentIndex = 0;
-                const slideWidth = slides[0].offsetWidth; // Предполагаем, что все слайды одинаковой ширины
+            let currentIndex = 0;
+            let autoPlayInterval; // Для хранения ID интервала автопрокрутки
+            const autoPlayDelay = 5000; // 5 секунд
 
+            if (slides.length > 0) {
                 // --- Создание точек-индикаторов
                 const dots = [];
                 if (dotsNav && slides.length > 1) {
@@ -252,8 +253,14 @@
                 }
 
                 const updateButtonStatesAndDots = () => {
-                    prevButton.disabled = currentIndex === 0;
-                    nextButton.disabled = currentIndex === slides.length - 1;
+                    if (slides.length <= 1) { // Если слайд один, кнопки и точки не нужны
+                         if (prevButton) prevButton.style.display = 'none';
+                         if (nextButton) nextButton.style.display = 'none';
+                         if (dotsNav) dotsNav.style.display = 'none';
+                         return;
+                    }
+                    if (prevButton) prevButton.disabled = currentIndex === 0;
+                    if (nextButton) nextButton.disabled = currentIndex === slides.length - 1;
 
                     if (dots.length > 0) {
                         dots.forEach(dot => dot.classList.remove('moderators-carousel__dot--active'));
@@ -265,29 +272,63 @@
 
                 const moveToSlide = (index) => {
                     if (index < 0 || index >= slides.length) return;
-                    // Убедимся, что slideWidth актуальна, если слайды могут загружаться с задержкой
-                    const currentSlideWidth = slides[index] ? slides[index].offsetWidth : slideWidth;
-                    track.style.transform = `translateX(-${index * currentSlideWidth}px)`;
+                    
+                    // Убедимся, что slideWidth актуальна, особенно если слайды могут иметь разную ширину или подгружаться
+                    const currentSlideWidth = slides[index] ? slides[index].offsetWidth : (slides[0] ? slides[0].offsetWidth : 0);
+                    if (currentSlideWidth === 0 && slides.length > 0) { // Если ширина не определена, пробуем еще раз или используем ширину трека/вьюпорта
+                        const viewportWidth = track.parentElement.offsetWidth;
+                         track.style.transform = `translateX(-${index * viewportWidth}px)`;
+                    } else {
+                         track.style.transform = `translateX(-${index * currentSlideWidth}px)`;
+                    }
                     currentIndex = index;
                     updateButtonStatesAndDots();
                 };
 
-                nextButton.addEventListener('click', () => {
-                    moveToSlide(currentIndex + 1);
-                });
+                // --- Функции автопрокрутки ---
+                const startAutoPlay = () => {
+                    stopAutoPlay();
+                    if (slides.length > 1) {
+                        autoPlayInterval = setInterval(() => {
+                            let nextIndex = currentIndex + 1;
+                            if (nextIndex >= slides.length) {
+                                nextIndex = 0;
+                            }
+                            moveToSlide(nextIndex);
+                        }, autoPlayDelay);
+                    }
+                };
 
-                prevButton.addEventListener('click', () => {
-                    moveToSlide(currentIndex - 1);
-                });
+                const stopAutoPlay = () => {
+                    clearInterval(autoPlayInterval);
+                };
 
-                if (slides.length <= 1) {
-                    nextButton.style.display = 'none';
-                    prevButton.style.display = 'none';
-                    if (dotsNav) dotsNav.style.display = 'none';
-                } else {
-                    updateButtonStatesAndDots();
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        stopAutoPlay();
+                        moveToSlide(currentIndex + 1);
+                        startAutoPlay();
+                    });
                 }
-            } else {
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        stopAutoPlay();
+                        moveToSlide(currentIndex - 1);
+                        startAutoPlay();
+                    });
+                }
+
+                moderatorsCarouselElem.addEventListener('mouseenter', stopAutoPlay);
+                moderatorsCarouselElem.addEventListener('mouseleave', startAutoPlay);
+                
+                updateButtonStatesAndDots();
+                if (slides.length > 1) {
+                    startAutoPlay();
+                }
+
+
+            } else { 
                 if (nextButton) nextButton.style.display = 'none';
                 if (prevButton) prevButton.style.display = 'none';
                 if (dotsNav) dotsNav.style.display = 'none';
