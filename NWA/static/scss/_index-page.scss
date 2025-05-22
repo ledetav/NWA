@@ -129,7 +129,6 @@
         }
     }
 
-
     .calendar { // Основной контейнер календаря
         display: flex;
         flex-direction: column;
@@ -254,7 +253,7 @@
         width: 100%;
         box-shadow: 0 3px 7px rgba($dark-shadow-color, 0.15);
 
-        &__avatar { // Для аватара модератора (как на макете)
+        &__avatar { // Для аватара модератора
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -301,56 +300,84 @@
         }
     }
 
-    .moderators-carousel {
-        position: relative;
-        width: 100%;
-        max-width: 400px;
-        margin: 0 auto; // Центрируем карусель в секции
+    .moderators-carousel-wrapper { // Обертка для карусели и точек
         display: flex;
-        align-items: center; // Выравниваем кнопки по вертикали с "окном" карусели
+        flex-direction: column;
+        align-items: center;
 
-        &__viewport {
-            width: 100%; // Вьюпорт займет всю ширину .moderators-carousel
-            overflow: hidden; // Это ключ к эффекту карусели - обрезаем всё, что не помещается
-            margin: 0 15px; // Небольшой отступ, если кнопки близко
-        }
-
-        &__track {
-            display: flex; // Располагаем слайды (карточки модераторов) в ряд
-            transition: transform 0.4s ease-in-out; // Плавная анимация сдвига
-            // Ширина трека будет больше вьюпорта, если слайдов много
-        }
-
-        &__btn {
-            background-color: darken($bg-color, 5%);
-            border: 1px solid darken($bg-color, 10%);
-            color: $text-color;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 1.4em;
-            line-height: 1;
-            cursor: pointer;
+        .moderators-carousel { // Сам блок карусели
+            position: relative;
+            width: 100%;
+            max-width: 400px; // Максимальная ширина карусели
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s ease, opacity 0.2s ease;
-            flex-shrink: 0; // Чтобы кнопки не сжимались
+            margin-bottom: 15px; // Отступ между каруселью и точками
 
-            &:hover:not(:disabled) {
-                background-color: darken($bg-color, 10%);
+            &__viewport {
+                width: 100%;
+                overflow: hidden;
+                margin: 0 15px; 
             }
 
-            &:disabled {
-                opacity: 0.4;
-                cursor: not-allowed;
+            &__track {
+                display: flex;
+                transition: transform 0.4s ease-in-out;
+            }
+
+            &__btn {
+                background-color: darken($bg-color, 5%);
+                border: 1px solid darken($bg-color, 10%);
+                color: $text-color;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                font-size: 1.4em;
+                line-height: 1;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.2s ease, opacity 0.2s ease;
+                flex-shrink: 0;
+
+                &:hover:not(:disabled) {
+                    background-color: darken($bg-color, 10%);
+                }
+
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+            }
+            
+            // Стили для .moderator-item, когда он является слайдом внутри карусели
+            .moderator-item { 
+                flex: 0 0 100%; // Каждый слайд занимает 100% ширины ВЬЮПОРТА
+                box-sizing: border-box;
+                margin: 0; // Убираем внешние отступы у слайда, т.к. он внутри трека
             }
         }
 
-        .moderator-item {
-            flex: 0 0 100%; // Каждый слайд занимает 100% ширины ВЬЮПОРТА
-            box-sizing: border-box;
-            margin: 0;
+        // Стили для контейнера точек
+        .moderators-carousel__dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 0; // Небольшой отступ для области точек
+    
+            .moderators-carousel__dot { // Стили для отдельной точки
+                background-color: darken($bg-color, 15%);
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin: 0 5px; // Промежуток между точками
+                transition: background-color 0.3s ease, transform 0.2s ease;
+    
+                &--active {
+                    background-color: $link-color; 
+                    transform: scale(1.2); // Небольшое увеличение для активной точки
+                }
+            }
         }
     }
 }

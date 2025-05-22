@@ -29,12 +29,22 @@
             <h2 class="index-page__section-title">Календарь</h2>
             <div class="calendar">
                 <div class="calendar__header">
-                    <button id="Btn-back-calendar" title="Предыдущий месяц"><</button>
+                    <button id="Btn-back-calendar" title="Предыдущий месяц">
+                        <i class="fa-solid fa-arrow-left fa-xs"></i>
+                    </button>
                     <h3 id="monthYearDisplayCalendar">Месяц Год</h3>
-                    <button id="Btn-next-calendar" title="Следующий месяц">></button>
+                    <button id="Btn-next-calendar" title="Следующий месяц">
+                        <i class="fa-solid fa-arrow-right fa-xs"></i>
+                    </button>
                 </div>
                 <div class="calendar__weekdays">
-                    <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
                 </div>
                 <div class="calendar__days">
                 </div>
@@ -44,29 +54,35 @@
         <section class="index-page__section index-page__section--moderators">
             <h2 class="index-page__section-title">Ответственные</h2>
             {% if moderators_list %}
-            <div class="moderators-carousel">
-                <button class="moderators-carousel__btn moderators-carousel__btn--prev" aria-label="Предыдущий модератор" title="Предыдущий"><</button>
-                <div class="moderators-carousel__viewport">
-                    <div class="moderators-carousel__track">
-                        {% for moderator in moderators_list %}
-                        <div class="moderator-item"> {# Этот блок .moderator-item теперь является слайдом карусели #}
-                            <div class="moderator-item__avatar">
-                                <i class="{{ moderator.avatar_icon_class|default:'fa-solid fa-user-secret' }}"></i>
+            <div class="moderators-carousel-wrapper"> {# Новый контейнер-обертка #}
+                <div class="moderators-carousel">
+                    <button class="moderators-carousel__btn moderators-carousel__btn--prev"
+                        aria-label="Предыдущий модератор" title="Предыдущий"><i class="fa-solid fa-arrow-left fa-xs"></i></button>
+                            <div class="moderators-carousel__viewport">
+                                <div class="moderators-carousel__track">
+                                    {% for moderator in moderators_list %}
+                                    <div class="moderator-item">
+                                        <div class="moderator-item__avatar">
+                                            <i
+                                                class="{{ moderator.avatar_icon_class|default:'fa-solid fa-user-secret' }}"></i>
+                                        </div>
+                                        <div class="moderator-item__name">{{ moderator.name }}</div>
+                                        <div class="moderator-item__role">{{ moderator.position }}</div>
+                                        <div class="moderator-item__links">
+                                            <a href="https://catwar.net/cat{{ moderator.cat_id }}">Вар</a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div class="moderator-item__name">{{ moderator.name }}</div>
-                            <div class="moderator-item__role">{{ moderator.position }}</div>
-                            <div class="moderator-item__links">
-                                <a href="https://catwar.net/cat{{ moderator.cat_id }}">Вар</a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
+                            <button class="moderators-carousel__btn moderators-carousel__btn--next"
+                                aria-label="Следующий модератор" title="Следующий"><i class="fa-solid fa-arrow-right fa-xs"></i></button>
                 </div>
-                <button class="moderators-carousel__btn moderators-carousel__btn--next" aria-label="Следующий модератор" title="Следующий">></button>
+                <div class="moderators-carousel__dots"></div>
             </div>
             {% else %}
             <div class="moderators-list">
-                 <div class="moderator-item">
+                <div class="moderator-item">
                     <div class="moderator-item__avatar">
                         <i class="fa-solid fa-user-astronaut"></i>
                     </div>
@@ -81,8 +97,8 @@
 {% endblock page_content %}
 
 {% block scripts_block %}
-    {{ block.super }}
-    <script>
+{{ block.super }}
+<script>
     document.addEventListener('DOMContentLoaded', async function () {
         const upcomingBirthdaysList = document.querySelector('.upcoming-birthdays__list');
         const loadingMessage = document.querySelector('.upcoming-birthdays__loading');
@@ -100,26 +116,26 @@
         }
 
         function displayUpcomingBirthdays(birthdays) {
-            if (loadingMessage) upcomingBirthdaysList.innerHTML = ''; 
+            if (loadingMessage) upcomingBirthdaysList.innerHTML = '';
 
             const today = new Date();
-            today.setHours(0, 0, 0, 0); 
+            today.setHours(0, 0, 0, 0);
 
             const upcoming = birthdays
                 .map(person => ({
                     ...person,
-                    dateObject: new Date(person.birthday_date) 
+                    dateObject: new Date(person.birthday_date)
                 }))
                 .map(person => {
                     let birthdayThisYear = new Date(person.dateObject);
                     birthdayThisYear.setFullYear(today.getFullYear());
-                    if (birthdayThisYear < today) { 
-                        birthdayThisYear.setFullYear(today.getFullYear() + 1); 
+                    if (birthdayThisYear < today) {
+                        birthdayThisYear.setFullYear(today.getFullYear() + 1);
                     }
                     return { ...person, nextBirthday: birthdayThisYear };
                 })
-                .sort((a, b) => a.nextBirthday - b.nextBirthday) 
-                .slice(0, 4); 
+                .sort((a, b) => a.nextBirthday - b.nextBirthday)
+                .slice(0, 4);
 
             if (upcoming.length === 0) {
                 upcomingBirthdaysList.innerHTML = '<p>Нет ближайших именинников.</p>';
@@ -139,7 +155,7 @@
                 upcomingBirthdaysList.appendChild(itemDiv);
             });
         }
-        
+
         try {
             const response = await fetch("{% static 'data/birthdays_data.json' %}");
             if (!response.ok) {
@@ -199,34 +215,61 @@
                 renderOldCalendar();
             });
             if (allBirthdays.length > 0 || "{% static 'data/birthdays_data.json' %}") { // Рендерим календарь, если есть данные или они должны были загрузиться
-                 renderOldCalendar();
+                renderOldCalendar();
             }
         } else {
             console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
         }
 
         // --- Логика для карусели модераторов ---
-        const moderatorsCarouselElem = document.querySelector('.moderators-carousel');
-        if (moderatorsCarouselElem) {
+        const moderatorsCarouselWrapper = document.querySelector('.moderators-carousel-wrapper');
+        if (moderatorsCarouselWrapper) {
+            const moderatorsCarouselElem = moderatorsCarouselWrapper.querySelector('.moderators-carousel');
             const track = moderatorsCarouselElem.querySelector('.moderators-carousel__track');
-            const slides = Array.from(track.children); // .moderator-item теперь слайды
+            const slides = Array.from(track.children);
             const nextButton = moderatorsCarouselElem.querySelector('.moderators-carousel__btn--next');
             const prevButton = moderatorsCarouselElem.querySelector('.moderators-carousel__btn--prev');
+            const dotsNav = moderatorsCarouselWrapper.querySelector('.moderators-carousel__dots');
 
             if (slides.length > 0) {
                 let currentIndex = 0;
-                const slideWidth = slides[0].offsetWidth; // Получаем реальную ширину слайда
+                const slideWidth = slides[0].offsetWidth; // Предполагаем, что все слайды одинаковой ширины
 
-                const updateButtonStates = () => {
+                // --- Создание точек-индикаторов
+                const dots = [];
+                if (dotsNav && slides.length > 1) {
+                    slides.forEach((slide, index) => {
+                        const dotIndicator = document.createElement('div');
+                        dotIndicator.classList.add('moderators-carousel__dot');
+                        if (index === 0) {
+                            dotIndicator.classList.add('moderators-carousel__dot--active');
+                        }
+                        dotsNav.appendChild(dotIndicator);
+                        dots.push(dotIndicator);
+                    });
+                } else if (dotsNav) {
+                    dotsNav.style.display = 'none';
+                }
+
+                const updateButtonStatesAndDots = () => {
                     prevButton.disabled = currentIndex === 0;
                     nextButton.disabled = currentIndex === slides.length - 1;
+
+                    if (dots.length > 0) {
+                        dots.forEach(dot => dot.classList.remove('moderators-carousel__dot--active'));
+                        if (dots[currentIndex]) {
+                            dots[currentIndex].classList.add('moderators-carousel__dot--active');
+                        }
+                    }
                 };
 
                 const moveToSlide = (index) => {
                     if (index < 0 || index >= slides.length) return;
-                    track.style.transform = `translateX(-${index * slideWidth}px)`;
+                    // Убедимся, что slideWidth актуальна, если слайды могут загружаться с задержкой
+                    const currentSlideWidth = slides[index] ? slides[index].offsetWidth : slideWidth;
+                    track.style.transform = `translateX(-${index * currentSlideWidth}px)`;
                     currentIndex = index;
-                    updateButtonStates();
+                    updateButtonStatesAndDots();
                 };
 
                 nextButton.addEventListener('click', () => {
@@ -236,25 +279,20 @@
                 prevButton.addEventListener('click', () => {
                     moveToSlide(currentIndex - 1);
                 });
-                
+
                 if (slides.length <= 1) {
                     nextButton.style.display = 'none';
                     prevButton.style.display = 'none';
+                    if (dotsNav) dotsNav.style.display = 'none';
                 } else {
-                    updateButtonStates(); // Изначальная настройка состояния кнопок
+                    updateButtonStatesAndDots();
                 }
-
-                // Опционально: адаптация при изменении размера окна, если ширина слайда может меняться
-                // window.addEventListener('resize', () => {
-                //     slideWidth = slides[0].offsetWidth; // Пересчитать ширину
-                //     moveToSlide(currentIndex); // Обновить позицию
-                // });
-
-            } else { // Если нет слайдов (например, список модераторов пуст и не был заменен плейсхолдером)
-                if(nextButton) nextButton.style.display = 'none';
-                if(prevButton) prevButton.style.display = 'none';
+            } else {
+                if (nextButton) nextButton.style.display = 'none';
+                if (prevButton) prevButton.style.display = 'none';
+                if (dotsNav) dotsNav.style.display = 'none';
             }
         }
     });
-    </script>
+</script>
 {% endblock scripts_block %}
