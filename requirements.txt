@@ -6,3 +6,4 @@ redis
 django-cors-headers
 django-sass-processor 
 libsass
+factory-boy
