@@ -19,19 +19,16 @@
         <div class="filter__action">
             <button type="button" class="button button--neumorphic filter__button">Фильтровать</button>
         </div>
-        
-        <div class="filter__group">
-            <label class="filter__label" for="celebrant-select">Выберите именинника:</label>
-            <select class="filter__select" id="celebrant-select" name="celebrant-name">
-                {% for row in blogs %}
-                <option value="all">{{ row.celebrant_name }}</option>
-                <!-- здеся нужно будет фильтр впихнуть каким то раком -->
-                {% endfor %}
-            </select>
-        </div>
-        <div class="filter__action">
-             <button type="button" class="button button--neumorphic filter__button">Найти</button>
-        </div>
+
+        <form method="get">
+            <div class="filter__group">
+                <label class="filter__label" for="celebrant-name-input">Введите имя именинника:</label>
+                <input type="text" class="filter__input" id="celebrant-name-input" name="celebrant_name" value="{{ celebrant_name|default:'' }}">
+            </div>
+            <div class="filter__action">
+                <button type="submit" class="button button--neumorphic filter__button">Найти</button>
+            </div>
+        </form>
     </div>
 
     <div class="log-page__table-container">

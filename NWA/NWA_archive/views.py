@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Moderators, NorthernWarmers, Blogs, NWAArchiveArts, NWAArchiveTexts, NWAArchiveCongratulations, NWAArchiveCodes
 from django.db import connection
+from django.db.models import Q
 
 def main_page_view(request):
     blog_count = Blogs.objects.count()  # Получаем количество строк
@@ -45,53 +46,62 @@ def main_page_view(request):
     return render(request, 'index.html', context)
 
 def log_page_view(request):
-    # Получаем все блоги
-    blogs = Blogs.objects.all()
-
-    # Получаем все арты
-    arts = NWAArchiveArts.objects.all()
-
-    # Получаем все тексты
-    texts = NWAArchiveTexts.objects.all()
-
-    # Получаем все коды
-    codes = NWAArchiveCodes.objects.all()
-
-    # Создаем список для хранения всех данных
+    celebrant_name = request.GET.get('celebrant_name', '')
     all_works = []
 
-    # Добавляем информацию из NWAArchiveArts
+    if celebrant_name:
+        # Используем Q-объекты для поиска без учета регистра
+        q_filter = Q(blog_id__celebrant_name__icontains=celebrant_name) | Q(celebrant_name__icontains=celebrant_name)
+
+        arts = NWAArchiveArts.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
+        texts = NWAArchiveTexts.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
+        codes = NWAArchiveCodes.objects.filter(blog_id__celebrant_name__icontains=celebrant_name)
+        blogs = Blogs.objects.filter(celebrant_name__icontains=celebrant_name)
+    else:
+        arts = NWAArchiveArts.objects.all()
+        texts = NWAArchiveTexts.objects.all()
+        codes = NWAArchiveCodes.objects.all()
+        blogs = Blogs.objects.all()
+
     for art in arts:
         all_works.append({
             'celebrant_name': art.blog_id.celebrant_name,
-            'birthday_date': art.blog_id.birthday_date,
-            'work_type': 'Art',  # Указываем тип работы
+            'birthday_date': art.blog_id.birthday_date.strftime("%d.%m.%Y"),
+            'work_type': 'Art',
             'nw_name': art.nw_ID.nw_name,
             'work_date': art.work_publication_date,
         })
 
-    # Добавляем информацию из NWAArchiveTexts
     for text in texts:
         all_works.append({
             'celebrant_name': text.blog_id.celebrant_name,
-            'birthday_date': text.blog_id.birthday_date,
-            'work_type': 'Text',  # Указываем тип работы
+            'birthday_date': text.blog_id.birthday_date.strftime("%d.%m.%Y"),
+            'work_type': 'Text',
             'nw_name': text.nw_ID.nw_name,
             'work_date': text.work_publication_date,
         })
 
-    # Добавляем информацию из NWAArchiveCodes
     for code in codes:
         all_works.append({
             'celebrant_name': code.blog_id.celebrant_name,
-            'birthday_date': code.blog_id.birthday_date,
-            'work_type': 'Code',  # Указываем тип работы
+            'birthday_date': code.blog_id.birthday_date.strftime("%d.%m.%Y"),
+            'work_type': 'Code',
             'nw_name': code.nw_ID.nw_name,
             'work_date': code.work_publication_date,
+        })
+    
+    for blog in blogs:
+        all_works.append({
+            'celebrant_name': blog.celebrant_name,
+            'birthday_date': blog.birthday_date.strftime("%d.%m.%Y"),
+            'work_type': 'Blog',
+            'nw_name': blog.moderator_id.nw_ID.nw_name,
+            'work_date': None,
         })
 
     context = {
         'blogs': all_works,
+        'celebrant_name': celebrant_name,
     }
     return render(request, 'log.html', context)
 
