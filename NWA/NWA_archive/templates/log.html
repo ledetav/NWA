@@ -6,25 +6,25 @@
 {% block page_content %}
 <div class="log-page">
     <div class="log-page__filter">
-        <h2 class="filter__title">Фильтры</h2>
-        <form method="get">
-            <div class="filter__group">
-                <label class="filter__label" for="type-work-select">Выберите тип работы:</label>
+        <form method="get" class="filter__form">
+            <div class="filter__item filter__item--type">
+                <label class="filter__label" for="type-work-select">Тип работы:</label>
                 <select class="filter__select" id="type-work-select" name="type_work">
                     {% for value, display_name in work_type_choices %}
                          <option value="{{ value }}" {% if value == selected_work_type %}selected{% endif %}>{{ display_name }}</option>
                     {% endfor %}
                 </select>
+                 <button type="submit" class="button button--neumorphic filter__button" title="Фильтровать по типу">
+                     <i class="fas fa-filter"></i>
+                 </button>
             </div>
-             <div class="filter__action">
-                 <button type="submit" class="button button--neumorphic filter__button">Фильтровать</button>
-             </div>
-            <div class="filter__group">
-                <label class="filter__label" for="celebrant-name-input">Введите имя именинника:</label>
+
+            <div class="filter__item filter__item--search">
+                <label class="filter__label" for="celebrant-name-input">Имя именинника:</label>
                 <input type="text" class="filter__input" id="celebrant-name-input" name="celebrant_name" value="{{ celebrant_name|default:'' }}">
-            </div>
-            <div class="filter__action">
-                <button type="submit" class="button button--neumorphic filter__button">Найти</button>
+                <button type="submit" class="button button--neumorphic filter__button" title="Найти по имени">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </form>
     </div>

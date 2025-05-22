@@ -4,71 +4,91 @@
     gap: 25px;
 
     &__filter {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Адаптивные колонки для фильтров
-        gap: 20px;
         padding: 20px;
         border-radius: $border-radius-medium;
         background-color: lighten($bg-color, 2%);
         box-shadow: 0 2px 5px rgba($dark-shadow-color, 0.1);
 
         .filter__title {
-            grid-column: 1 / -1; // Заголовок на всю ширину
             text-align: center;
             font-size: 1.3em;
             font-weight: 600;
             color: darken($text-color, 10%);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .filter__group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .filter__form {
+            display: grid;
+            grid-template-columns: 1fr 2fr; // Фильтр по типу занимает 1 часть, поиск по имени - 2 части
+            gap: 20px; // Промежуток между блоком фильтра по типу и блоком поиска
+            align-items: end; // Выравниваем элементы по нижней границе (полезно для кнопок)
+
+            @media (max-width: 768px) { // На маленьких экранах располагаем друг под другом
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .filter__item { // Каждый блок (фильтр по типу / поиск по имени)
+            display: grid;
+            grid-template-areas:
+                "label label"
+                "input button";
+            grid-template-columns: 1fr auto; // Поле ввода/селект занимает доступное место, кнопка - автоширину
+            gap: 8px; // Промежутки между label, input/select и button
+            align-items: end; // Выравниваем input/select и button по нижней границе
         }
 
         .filter__label {
+            grid-area: label; // Помещаем label в область "label"
             font-weight: 500;
             color: darken($text-color, 5%);
         }
 
-        .filter__select {
+        .filter__select,
+        .filter__input {
+            grid-area: input; // Помещаем input/select в область "input"
             padding: 10px 15px;
             border-radius: $border-radius-small;
-            border: 1px solid darken($dark-shadow-color, 5%);
-            background-color: $bg-color;
+            border: 1px solid transparent; // Для неоморфизма лучше без видимой рамки или рамка = цвет фона
+            background-color: $bg-color; // Для вдавленного эффекта
             color: $text-color;
-            width: 100%; // Растягиваем селект на всю ширину группы
+            width: 100%; // Занимает всю ширину своей ячейки грида
+            font-size: 0.95em; // Немного увеличим шрифт для читаемости
+            @include neumorphic-concave(4px, 8px, $border-radius-small); // Применяем вдавленный неоморфизм
+
             &:focus {
               outline: none;
-              border-color: $link-color;
-              box-shadow: 0 0 0 2px rgba($link-color, 0.2);
+              border-color: $link-color; // Можно оставить или убрать, полагаясь на box-shadow
+              box-shadow:
+                inset 4px 4px 8px darken($dark-shadow-color, 5%), // Более глубокая внутренняя тень
+                inset -4px -4px 8px lighten($light-shadow-color, 3%), // Более яркий внутренний блик
+                0 0 0 2px rgba($link-color, 0.2); // Внешнее свечение для акцента на фокусе
             }
         }
 
-        .filter__action {
-            display: flex;
-            align-items: flex-end; // Кнопка будет внизу, если высота группы больше
-            .button { // Используем существующий класс .button
-                width: 100%; // Кнопка на всю ширину контейнера действия
-            }
+        .filter__button { // Кнопки фильтра и поиска
+            grid-area: button; // Помещаем кнопку в область "button"
+            width: 44px;       // Фиксированная ширина для квадратной кнопки
+            height: 44px;      // Фиксированная высота
+            padding: 0;        // Убираем внутренние отступы, т.к. размер фиксирован
+            font-size: 1.1em;  // Размер иконки будет зависеть от этого
         }
     }
 
     &__table-container {
         width: 100%;
-        overflow-x: auto; // Для горизонтальной прокрутки на маленьких экранах
+        overflow-x: auto;
     }
 
-    .data-table { // Общие стили для таблиц данных
+    .data-table {
         width: 100%;
-        min-width: 600px; // Минимальная ширина таблицы перед появлением прокрутки
+        min-width: 600px;
         border-collapse: collapse;
         
         th, td {
             padding: 12px 15px;
             word-wrap: break-word;
-            text-align: center; // Как было в оригинале
+            text-align: center;
             border: 1px solid darken($bg-color, 12%);
         }
 
