@@ -1,3 +1,5 @@
+@use 'global_styles' as *;
+
 .index-page {
     &__grid {
         display: grid;
