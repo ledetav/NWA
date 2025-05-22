@@ -109,6 +109,7 @@
         const nextCalendarBtn = document.getElementById('Btn-next-calendar');
 
         let allBirthdays = [];
+        const SAD_TARTAGLIA_IMAGE_URL = "https://th.bing.com/th/id/R.37711399fdcb5825597c3d6008f4de8c?rik=ObYrjlIPbIZc1Q&pid=ImgRaw&r=0"; 
 
         function formatDateForDisplay(dateString) {
             const date = new Date(dateString);
@@ -116,7 +117,6 @@
         }
 
         function showBirthdayPersonModal(personData) {
-            // Формируем HTML для тела модального окна на основе данных personData
             let bodyContent = `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <img src="${personData.image}" alt="${personData.name}" style="max-width: 200px; max-height:200px; object-fit: contain; border-radius: 10px; margin-bottom: 15px;">
@@ -130,30 +130,22 @@
             `;
 
             window.showCustomModal({
-                title: personData.name, // Имя именинника в заголовке
+                title: personData.name,
                 bodyHtml: bodyContent,
                 footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Закрыть</button>`
             });
         }
 
-
         function displayUpcomingBirthdays(birthdaysData) {
             if (loadingMessage) upcomingBirthdaysList.innerHTML = '';
-
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-
             const upcoming = birthdaysData
-                .map(person => ({
-                    ...person,
-                    dateObject: new Date(person.birthday_date)
-                }))
+                .map(person => ({ ...person, dateObject: new Date(person.birthday_date) }))
                 .map(person => {
                     let birthdayThisYear = new Date(person.dateObject);
                     birthdayThisYear.setFullYear(today.getFullYear());
-                    if (birthdayThisYear < today) {
-                        birthdayThisYear.setFullYear(today.getFullYear() + 1);
-                    }
+                    if (birthdayThisYear < today) birthdayThisYear.setFullYear(today.getFullYear() + 1);
                     return { ...person, nextBirthday: birthdayThisYear };
                 })
                 .sort((a, b) => a.nextBirthday - b.nextBirthday)
@@ -163,13 +155,11 @@
                 upcomingBirthdaysList.innerHTML = '<p>Нет ближайших именинников.</p>';
                 return;
             }
-
             upcoming.forEach(person => {
                 const itemDiv = document.createElement('div');
                 itemDiv.classList.add('upcoming-birthdays__item');
                 itemDiv.style.cursor = 'pointer';
-                itemDiv.dataset.personId = person.id; // Используем ID для поиска
-
+                itemDiv.dataset.personId = person.id;
                 itemDiv.innerHTML = `
                     <div class="upcoming-birthdays__date">${formatDateForDisplay(person.nextBirthday)}</div>
                     <div class="upcoming-birthdays__avatar">
@@ -177,19 +167,13 @@
                     </div>
                     <div class="upcoming-birthdays__name">${person.name}</div>
                 `;
-
                 itemDiv.addEventListener('click', function() {
-                    const personId = parseInt(this.dataset.personId, 10); // Преобразуем ID в число
+                    const personId = parseInt(this.dataset.personId, 10);
                     const fullPersonData = allBirthdays.find(p => p.id === personId);
-                    if (fullPersonData) {
-                        showBirthdayPersonModal(fullPersonData);
-                    } else {
+                    if (fullPersonData) showBirthdayPersonModal(fullPersonData);
+                    else {
                         console.error('Не удалось найти данные для именинника с ID:', personId);
-                        window.showCustomModal({
-                            title: 'Ошибка',
-                            bodyHtml: '<p>Не удалось загрузить подробную информацию об имениннике.</p>',
-                            footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Закрыть</button>`
-                        });
+                        window.showCustomModal({ title: 'Ошибка', bodyHtml: '<p>Не удалось загрузить информацию.</p>', footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Закрыть</button>`});
                     }
                 });
                 upcomingBirthdaysList.appendChild(itemDiv);
@@ -198,27 +182,69 @@
 
         try {
             const response = await fetch("{% static 'data/birthdays_data.json' %}");
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             allBirthdays = await response.json();
             displayUpcomingBirthdays(allBirthdays);
         } catch (error) {
             console.error("Could not load birthdays data:", error);
-            if (loadingMessage) upcomingBirthdaysList.innerHTML = '<p>Не удалось загрузить именинников.</p>';
+            if (loadingMessage) loadingMessage.innerHTML = '<p>Не удалось загрузить именинников.</p>';
             if (calendarDaysElement) calendarDaysElement.innerHTML = '<p>Не удалось загрузить данные для календаря.</p>';
         }
 
         if (monthYearDisplayCalendar && calendarDaysElement && prevCalendarBtn && nextCalendarBtn) {
             let calendarCurrentDate = new Date();
-            function renderOldCalendar() {
+
+            function handleCalendarDayClick(day, month, year, birthdaysOnThisDay) {
+                const clickedDateStr = `${day}.${month + 1}.${year}`;
+                if (birthdaysOnThisDay.length > 0) {
+                    if (birthdaysOnThisDay.length === 1) {
+                        showBirthdayPersonModal(birthdaysOnThisDay[0]);
+                    } else {
+                        let multipleBirthdaysHtml = `<p>В этот день, ${clickedDateStr}, родились:</p><ul style="list-style: none; padding-left: 0;">`;
+                        birthdaysOnThisDay.forEach(person => {
+                            multipleBirthdaysHtml += `<li style="margin-bottom: 10px;"><a href="#" class="js-select-birthday-person button button--neumorphic" style="display: block; text-align: center;" data-person-id="${person.id}">${person.name}</a></li>`;
+                        });
+                        multipleBirthdaysHtml += '</ul>';
+                        window.showCustomModal({
+                            title: `Именинники ${clickedDateStr}`,
+                            bodyHtml: multipleBirthdaysHtml,
+                            footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Отмена</button>`
+                        });
+                        document.querySelectorAll('.js-select-birthday-person').forEach(link => {
+                            link.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                const selectedId = parseInt(this.dataset.personId, 10);
+                                const personDetails = allBirthdays.find(p => p.id === selectedId);
+                                if (personDetails) {
+                                    window.closeCustomModal();
+                                    setTimeout(() => showBirthdayPersonModal(personDetails), 50);
+                                }
+                            });
+                        });
+                    }
+                } else {
+                    // Нет именинников в этот день
+                    window.showCustomModal({
+                        title: `События ${clickedDateStr}`,
+                        bodyHtml: `
+                            <p>К сожалению, ${day} ${calendarCurrentDate.toLocaleString('ru-RU', { month: 'long' })} ${year} года никто не празднует день рождения в нашем списке.</p>
+                            <div style="text-align:center; margin-top:20px;">
+                                <img src="${SAD_TARTAGLIA_IMAGE_URL}" alt="Грустный Тарталья" style="max-width:150px; height:auto;">
+                            </div>
+                        `,
+                        footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Понятно</button>`
+                    });
+                }
+            }
+
+            function renderCalendar() {
                 const year = calendarCurrentDate.getFullYear();
-                const month = calendarCurrentDate.getMonth();
+                const month = calendarCurrentDate.getMonth(); // 0-11
                 monthYearDisplayCalendar.textContent = `${calendarCurrentDate.toLocaleString('ru-RU', { month: 'long' })} ${year}`;
                 calendarDaysElement.innerHTML = '';
                 const firstDayOfMonth = new Date(year, month, 1);
                 const lastDayOfMonth = new Date(year, month + 1, 0);
-                const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7;
+                const firstDayOfWeek = (firstDayOfMonth.getDay() + 6) % 7; // Пн=0, Вс=6
                 const totalDaysInMonth = lastDayOfMonth.getDate();
 
                 for (let i = 0; i < firstDayOfWeek; i++) {
@@ -231,62 +257,49 @@
                 for (let i = 1; i <= totalDaysInMonth; i++) {
                     const dayCell = document.createElement('div');
                     dayCell.textContent = i;
-                    dayCell.dataset.day = i; dayCell.dataset.month = month + 1; dayCell.dataset.year = year;
+                    dayCell.dataset.day = i;
+                    dayCell.dataset.month = month + 1; // 1-12
+                    dayCell.dataset.year = year;
+                    dayCell.style.cursor = 'pointer'; // Делаем все дни кликабельными
+
                     if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                         dayCell.classList.add('today');
                     }
-                    const birthdaysInThisMonth = allBirthdays.filter(b => {
+
+                    // Находим именинников именно для этой даты (i, month, any year from JSON)
+                    const birthdaysInThisSpecificDay = allBirthdays.filter(b => {
                         const bDate = new Date(b.birthday_date);
                         return bDate.getMonth() === month && bDate.getDate() === i;
                     });
 
-                    if (birthdaysInThisMonth.length > 0) {
+                    if (birthdaysInThisSpecificDay.length > 0) {
                         dayCell.classList.add('has-birthday');
-                        dayCell.title = birthdaysInThisMonth.map(p => p.name).join(', ');
-                        dayCell.style.cursor = 'pointer';
-                        dayCell.addEventListener('click', function() {
-                            if (birthdaysInThisMonth.length === 1) {
-                                showBirthdayPersonModal(birthdaysInThisMonth[0]);
-                            } else {
-                                let multipleBirthdaysHtml = `<p>В этот день ${i}.${month + 1} родились:</p><ul style="list-style: none; padding-left: 0;">`;
-                                birthdaysInThisMonth.forEach(person => {
-                                    multipleBirthdaysHtml += `<li style="margin-bottom: 10px;"><a href="#" class="js-select-birthday-person button button--neumorphic" style="display: block; text-align: center;" data-person-id="${person.id}">${person.name}</a></li>`;
-                                });
-                                multipleBirthdaysHtml += '</ul>';
-
-                                window.showCustomModal({
-                                    title: `Именинники ${i}.${month + 1}.${year}`,
-                                    bodyHtml: multipleBirthdaysHtml,
-                                    footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Отмена</button>`
-                                });
-
-                                document.querySelectorAll('.js-select-birthday-person').forEach(link => {
-                                    link.addEventListener('click', function(e) {
-                                        e.preventDefault();
-                                        const selectedId = parseInt(this.dataset.personId, 10);
-                                        const personDetails = allBirthdays.find(p => p.id === selectedId);
-                                        if (personDetails) {
-                                            window.closeCustomModal();
-                                            setTimeout(() => showBirthdayPersonModal(personDetails), 50);
-                                        }
-                                    });
-                                });
-                            }
-                        });
+                        dayCell.title = `Есть именинники: ${birthdaysInThisSpecificDay.map(p => p.name).join(', ')}`;
+                    } else {
+                        dayCell.title = `Информации о днях рождения на ${i}.${month+1} нет`;
                     }
+
+                    // Добавляем обработчик клика НА КАЖДЫЙ ДЕНЬ
+                    dayCell.addEventListener('click', function() {
+                        const day = parseInt(this.dataset.day, 10);
+                        // month и year уже есть из замыкания renderCalendar
+                        handleCalendarDayClick(day, month, year, birthdaysInThisSpecificDay);
+                    });
                     calendarDaysElement.appendChild(dayCell);
                 }
             }
+
             prevCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() - 1);
-                renderOldCalendar();
+                renderCalendar();
             });
             nextCalendarBtn.addEventListener('click', () => {
                 calendarCurrentDate.setMonth(calendarCurrentDate.getMonth() + 1);
-                renderOldCalendar();
+                renderCalendar();
             });
-            if (allBirthdays.length > 0 || "{% static 'data/birthdays_data.json' %}") {
-                renderOldCalendar();
+
+            if (allBirthdays || "{% static 'data/birthdays_data.json' %}") {
+                 renderCalendar();
             }
         } else {
             console.warn('Один или несколько элементов календаря не найдены. Календарь не будет инициализирован.');
@@ -343,31 +356,17 @@
                     const moveToSlide = (index) => {
                         if (index < 0 || index >= slides.length) return;
                         
-                        const slideWidth = slides[0] ? slides[0].offsetWidth : track.parentElement.offsetWidth; // Более надежное получение ширины
+                        const slideWidth = slides[0] ? slides[0].offsetWidth : track.parentElement.offsetWidth; 
                         track.style.transform = `translateX(-${index * slideWidth}px)`;
                         currentIndex = index;
                         updateButtonStatesAndDots();
                     };
                     
-                    // Инициализация ширины слайдов после загрузки DOM и возможной подгрузки стилей
-                    // и вызов moveToSlide(0) для корректного позиционирования
                     if (slides.length > 0) {
-                        // Убедимся, что слайды имеют ширину перед первой прокруткой
-                        // Это может быть нужно, если ширина определяется CSS, который грузится позже
-                        const initialSlideWidth = slides[0].offsetWidth;
-                        if (initialSlideWidth > 0) {
-                             moveToSlide(currentIndex); // Обновляем позицию
-                        } else {
-                            // Если ширина еще 0, можно попробовать подождать немного
-                            // или положиться на resize listener (если он есть)
-                            console.warn("Moderator carousel slide width is 0 on init. Layout might be incorrect.");
-                            // Попробуем вычислить ширину через requestAnimationFrame
-                             requestAnimationFrame(() => {
-                                moveToSlide(currentIndex);
-                            });
-                        }
+                         requestAnimationFrame(() => {
+                            moveToSlide(currentIndex);
+                        });
                     }
-
 
                     const startAutoPlay = () => {
                         stopAutoPlay();
@@ -390,7 +389,7 @@
                         nextButton.addEventListener('click', () => {
                             stopAutoPlay();
                             moveToSlide(currentIndex + 1);
-                            startAutoPlay(); // Перезапускаем автоплей после ручного переключения
+                            startAutoPlay(); 
                         });
                     }
 
@@ -398,22 +397,20 @@
                         prevButton.addEventListener('click', () => {
                             stopAutoPlay();
                             moveToSlide(currentIndex - 1);
-                            startAutoPlay(); // Перезапускаем автоплей
+                            startAutoPlay(); 
                         });
                     }
                     
-                    // Остановка автопрокрутки при наведении и возобновление при уходе мыши
                     moderatorsCarouselElem.addEventListener('mouseenter', stopAutoPlay);
                     moderatorsCarouselElem.addEventListener('mouseleave', startAutoPlay);
                     
-                    // Первоначальная настройка и запуск автопрокрутки
                     updateButtonStatesAndDots();
-                    if (slides.length > 1) { // Запускаем автопрокрутку только если слайдов больше одного
+                    if (slides.length > 1) { 
                        startAutoPlay();
                     }
 
 
-                } else { // Если слайдов нет или всего один
+                } else { 
                     if (nextButton) nextButton.style.display = 'none';
                     if (prevButton) prevButton.style.display = 'none';
                     if (dotsNav) dotsNav.style.display = 'none';
