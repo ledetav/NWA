@@ -122,8 +122,8 @@
                     <img src="${personData.image}" alt="${personData.name}" style="max-width: 200px; max-height:200px; object-fit: contain; border-radius: 10px; margin-bottom: 15px;">
                 </div>
                 <div style="text-align: left;">
-                    <p><strong>ID в Варваре:</strong> <a href="https://catwar.net/cat${personData.cat_id}" target="_blank" rel="noopener noreferrer">${personData.cat_id}</a></p>
-                    <p><strong>Полная дата рождения:</strong> ${new Date(personData.birthday_date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                    <p><strong>ID в CatWar:</strong> <a href="https://catwar.net/cat${personData.cat_id}" target="_blank" rel="noopener noreferrer">${personData.cat_id}</a></p>
+                    <p><strong>Полная дата рождения:</strong> ${new Date(personData.birthday_date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long'})}</p>
                     <p><strong>Информация:</strong></p>
                     <p style="white-space: pre-wrap;">${personData.information || 'Информация отсутствует'}</p>
                 </div>
