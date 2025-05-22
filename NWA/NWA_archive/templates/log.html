@@ -6,14 +6,17 @@
 {% block page_content %}
 <div class="log-page">
     <div class="log-page__filter">
+        <h2 class="filter__title">Фильтры</h2>
         <form method="get" class="filter__form">
             <div class="filter__item filter__item--type">
                 <label class="filter__label" for="type-work-select">Тип работы:</label>
-                <select class="filter__select" id="type-work-select" name="type_work">
-                    {% for value, display_name in work_type_choices %}
-                         <option value="{{ value }}" {% if value == selected_work_type %}selected{% endif %}>{{ display_name }}</option>
-                    {% endfor %}
-                </select>
+                <div class="filter__select-wrapper">
+                    <select class="filter__select" id="type-work-select" name="type_work">
+                        {% for value, display_name in work_type_choices %}
+                             <option value="{{ value }}" {% if value == selected_work_type %}selected{% endif %}>{{ display_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                  <button type="submit" class="button button--neumorphic filter__button" title="Фильтровать по типу">
                      <i class="fas fa-filter"></i>
                  </button>

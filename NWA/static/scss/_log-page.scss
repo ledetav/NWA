@@ -19,59 +19,118 @@
 
         .filter__form {
             display: grid;
-            grid-template-columns: 1fr 2fr; // Фильтр по типу занимает 1 часть, поиск по имени - 2 части
-            gap: 20px; // Промежуток между блоком фильтра по типу и блоком поиска
-            align-items: end; // Выравниваем элементы по нижней границе (полезно для кнопок)
+            grid-template-columns: 1fr 2fr; 
+            gap: 20px; 
+            align-items: end; 
 
-            @media (max-width: 768px) { // На маленьких экранах располагаем друг под другом
+            @media (max-width: 768px) { 
                 grid-template-columns: 1fr;
             }
         }
 
-        .filter__item { // Каждый блок (фильтр по типу / поиск по имени)
+        .filter__item { 
             display: grid;
             grid-template-areas:
                 "label label"
                 "input button";
-            grid-template-columns: 1fr auto; // Поле ввода/селект занимает доступное место, кнопка - автоширину
-            gap: 8px; // Промежутки между label, input/select и button
-            align-items: end; // Выравниваем input/select и button по нижней границе
+            grid-template-columns: 1fr auto; 
+            gap: 8px; 
+            align-items: end; 
         }
 
         .filter__label {
-            grid-area: label; // Помещаем label в область "label"
+            grid-area: label; 
             font-weight: 500;
             color: darken($text-color, 5%);
         }
 
+        // Обертка для select, чтобы добавить кастомную стрелку
+        .filter__select-wrapper {
+            grid-area: input; // Обертка занимает место инпута в гриде
+            position: relative; // Для позиционирования псевдоэлемента-стрелки
+        }
+
         .filter__select,
         .filter__input {
-            grid-area: input; // Помещаем input/select в область "input"
+            // Общие стили для input и select
             padding: 10px 15px;
             border-radius: $border-radius-small;
-            border: 1px solid transparent; // Для неоморфизма лучше без видимой рамки или рамка = цвет фона
-            background-color: $bg-color; // Для вдавленного эффекта
+            border: 1px solid transparent; 
+            background-color: $bg-color;
             color: $text-color;
-            width: 100%; // Занимает всю ширину своей ячейки грида
-            font-size: 0.95em; // Немного увеличим шрифт для читаемости
-            @include neumorphic-concave(4px, 8px, $border-radius-small); // Применяем вдавленный неоморфизм
+            width: 100%; 
+            font-size: 0.95em;
+            @include neumorphic-concave(4px, 8px, $border-radius-small);
 
             &:focus {
               outline: none;
-              border-color: $link-color; // Можно оставить или убрать, полагаясь на box-shadow
+              border-color: $link-color; 
               box-shadow:
-                inset 4px 4px 8px darken($dark-shadow-color, 5%), // Более глубокая внутренняя тень
-                inset -4px -4px 8px lighten($light-shadow-color, 3%), // Более яркий внутренний блик
-                0 0 0 2px rgba($link-color, 0.2); // Внешнее свечение для акцента на фокусе
+                inset 4px 4px 8px darken($dark-shadow-color, 5%),
+                inset -4px -4px 8px lighten($light-shadow-color, 3%),
+                0 0 0 2px rgba($link-color, 0.2);
+            }
+        }
+        
+        // Специфичные стили для select
+        .filter__select {
+            // Убираем стандартный внешний вид
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            
+            // Убираем стандартную стрелку (важно!)
+            background-image: none; 
+            
+            padding-right: 40px; // Добавляем место справа для кастомной стрелки
+            cursor: pointer; // Показываем, что элемент кликабельный
+
+            // Стилизация опций (выпадающего списка)
+            option {
+                background-color: lighten($bg-color, 3%); // Фон для каждой опции
+                color: $text-color;         // Цвет текста опций
+                padding: 8px 12px;          // Паддинги для опций (часто игнорируются)
+
+                &:hover { // Стиль при наведении на опцию (может не работать)
+                    background-color: darken($bg-color, 5%);
+                }
+                &:checked { // Стиль выбранной опции в списке (может не работать)
+                    background-color: $link-color;
+                    color: $light-shadow-color; // Белый текст на цветном фоне
+                }
             }
         }
 
-        .filter__button { // Кнопки фильтра и поиска
-            grid-area: button; // Помещаем кнопку в область "button"
-            width: 44px;       // Фиксированная ширина для квадратной кнопки
-            height: 44px;      // Фиксированная высота
-            padding: 0;        // Убираем внутренние отступы, т.к. размер фиксирован
-            font-size: 1.1em;  // Размер иконки будет зависеть от этого
+        // Кастомная стрелка для select (CSS-треугольник)
+        .filter__select-wrapper::after {
+            content: ''; // Обязательно для псевдоэлементов
+            position: absolute;
+            top: 50%;
+            right: 15px; // Отступ стрелки от правого края
+            transform: translateY(-50%); // Вертикальное центрирование
+            
+            width: 0; 
+            height: 0; 
+            // Создаем треугольник, направленный вниз
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid $text-color; // Это "острие" треугольника
+            
+            pointer-events: none; // Клик должен проходить на сам <select>
+            transition: border-color 0.2s ease-in-out; // Плавный переход цвета стрелки
+        }
+
+        // Изменение цвета стрелки при фокусе на селекте внутри обертки
+        .filter__select-wrapper:focus-within::after {
+            border-top-color: $link-color; // Цвет стрелки меняется на акцентный
+        }
+
+        .filter__button { 
+            grid-area: button; 
+            width: 44px;       
+            height: 44px;      
+            padding: 0;        
+            font-size: 1.1em;  
         }
     }
 
