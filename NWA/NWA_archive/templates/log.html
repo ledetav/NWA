@@ -6,7 +6,6 @@
 {% block page_content %}
 <div class="log-page">
     <div class="log-page__filter">
-        <h2 class="filter__title">Фильтры</h2>
         <form method="get" class="filter__form">
             <div class="filter__item filter__item--type">
                 <label class="filter__label" for="type-work-select">Тип работы:</label>
@@ -48,7 +47,7 @@
                 <tr>
                     <td>{{ row.celebrant_name }}</td>
                     <td>{{ row.birthday_date }}</td>
-                    <td>{{ row.work_type }}</td>
+                    <td>{{ row.work_type_display }}</td>
                     <td>{{ row.nw_name }}</td>
                     <td>{{ row.work_date }}</td>
                 </tr>

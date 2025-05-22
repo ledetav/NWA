@@ -4,6 +4,17 @@ from .models import Moderators, NorthernWarmers, Blogs, NWAArchiveArts, NWAArchi
 from django.db import connection
 from django.db.models import Q
 
+WORK_TYPE_CHOICES_FILTER = [
+    ('all', 'Все типы'),
+    ('art', 'Арт'),
+    ('text', 'Текст'),
+    ('code', 'Код'),
+    ('congrats', 'Поздравление'),
+]
+
+def get_work_type_choices(): # Эта функция используется в шаблоне для генерации <select>
+    return WORK_TYPE_CHOICES_FILTER
+
 def main_page_view(request):
     blog_count = Blogs.objects.count()  # Получаем количество строк
     art_count = NWAArchiveArts.objects.count()  # Получаем количество строк
@@ -11,11 +22,11 @@ def main_page_view(request):
     code_count = NWAArchiveCodes.objects.count()  # Получаем количество строк
     moderator_id = request.GET.get('moderator_id')  # Получаем id модератора из GET-параметра
     try:
-        moderator = Moderators.objects.get(pk=moderator_id) #Получаем модератора по id
-        name = moderator.nw_ID.nw_name # получаем nw_name
-        #Получаем один экземпляр NorthernWarmers
+        moderator = Moderators.objects.get(pk=moderator_id) # Получаем модератора по id
+        name = moderator.nw_ID.nw_name # Получаем nw_name
+        # Получаем один экземпляр NorthernWarmers
     except Moderators.DoesNotExist:
-        name = None #Если не находим, то присваиваем значение None
+        name = None # Если не находим, то присваиваем значение None
 
     try:
         moderator = Moderators.objects.get(pk=moderator_id)
@@ -25,10 +36,10 @@ def main_page_view(request):
     
     try:
         moderator = get_object_or_404(Moderators, pk=moderator_id)
-        cat_id = moderator.nw_ID.cat_id  #Получаем cat_id из NorthernWarmers, связанного с модератором.
+        cat_id = moderator.nw_ID.cat_id  # Получаем cat_id из NorthernWarmers, связанного с модератором.
 
     except Moderators.DoesNotExist:
-        #Обработка, если id не верен.
+        # Обработка, если id не верен.
         cat_id = 558107 #Или возвращаем ошибку 404. Либо выводим сообщение на HTML.
     except Exception as e:
         cat_id = 558107
@@ -46,98 +57,75 @@ def main_page_view(request):
     return render(request, 'index.html', context)
 
 def log_page_view(request):
-    celebrant_name = request.GET.get('celebrant_name', '')
-    selected_work_type = request.GET.get('type_work', 'all')
+    celebrant_name_filter = request.GET.get('celebrant_name', '')
+    selected_work_type_filter = request.GET.get('type_work', 'all')
 
-    all_works = []
+    all_works_display_list = []
 
-    # Фильтруем Art, Text
-    arts = NWAArchiveArts.objects.all()
-    texts = NWAArchiveTexts.objects.all()
+    # Базовые QuerySets с select_related для оптимизации
+    arts_qs = NWAArchiveArts.objects.select_related('blog_id', 'nw_ID').all()
+    texts_qs = NWAArchiveTexts.objects.select_related('blog_id', 'nw_ID').all()
+    codes_qs = NWAArchiveCodes.objects.select_related('blog_id', 'nw_ID').all()
+    congrats_qs = NWAArchiveCongratulations.objects.select_related('blog_id', 'nw_ID').all()
 
-    if selected_work_type != 'all':
-        arts = arts.filter(work_type=int(selected_work_type))
-        texts = texts.filter(work_type=int(selected_work_type))
+    # Фильтрация по имени именинника
+    if celebrant_name_filter:
+        arts_qs = arts_qs.filter(blog_id__celebrant_name__icontains=celebrant_name_filter)
+        texts_qs = texts_qs.filter(blog_id__celebrant_name__icontains=celebrant_name_filter)
+        codes_qs = codes_qs.filter(blog_id__celebrant_name__icontains=celebrant_name_filter)
+        congrats_qs = congrats_qs.filter(blog_id__celebrant_name__icontains=celebrant_name_filter)
 
-    if celebrant_name:
-        arts = arts.filter(blog_id__celebrant_name__icontains=celebrant_name)
-        texts = texts.filter(blog_id__celebrant_name__icontains=celebrant_name)
+    # Формирование списка работ в зависимости от выбранного типа
+    if selected_work_type_filter == 'art' or selected_work_type_filter == 'all':
+        for art in arts_qs:
+            all_works_display_list.append({
+                'celebrant_name': art.blog_id.celebrant_name,
+                'birthday_date': art.blog_id.birthday_date.strftime("%d.%m.%Y"),
+                'work_type_display': "Арт", # Отображаемый тип работы
+                'nw_name': art.nw_ID.nw_name, # Даритель (автор арта)
+                'work_date': art.work_publication_date.strftime("%d.%m.%Y"),
+            })
 
-    # Фильтруем Codes (без work_type)
-    codes = NWAArchiveCodes.objects.all()
-    if celebrant_name:
-        codes = codes.filter(blog_id__celebrant_name__icontains=celebrant_name)
+    if selected_work_type_filter == 'text' or selected_work_type_filter == 'all':
+        for text in texts_qs:
+            all_works_display_list.append({
+                'celebrant_name': text.blog_id.celebrant_name,
+                'birthday_date': text.blog_id.birthday_date.strftime("%d.%m.%Y"),
+                'work_type_display': "Текст",
+                'nw_name': text.nw_ID.nw_name, # Даритель (автор текста)
+                'work_date': text.work_publication_date.strftime("%d.%m.%Y"),
+            })
 
-    # Фильтруем Blogs
-    blogs = Blogs.objects.all()
-    if celebrant_name:
-        blogs = blogs.filter(celebrant_name__icontains=celebrant_name)
+    if selected_work_type_filter == 'code' or selected_work_type_filter == 'all':
+        for code in codes_qs:
+            all_works_display_list.append({
+                'celebrant_name': code.blog_id.celebrant_name,
+                'birthday_date': code.blog_id.birthday_date.strftime("%d.%m.%Y"),
+                'work_type_display': "Код",
+                'nw_name': code.nw_ID.nw_name, # Даритель (автор кода)
+                'work_date': code.work_publication_date.strftime("%d.%m.%Y"),
+            })
 
-    # Добавляем информацию из NWAArchiveArts
-    for art in arts:
-        all_works.append({
-            'celebrant_name': art.blog_id.celebrant_name,
-            'birthday_date': art.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': get_work_type_display(art.work_type),
-            'nw_name': art.nw_ID.nw_name,
-            'work_date': art.work_publication_date,
-        })
-
-    # Добавляем информацию из NWAArchiveTexts
-    for text in texts:
-        all_works.append({
-            'celebrant_name': text.blog_id.celebrant_name,
-            'birthday_date': text.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': get_work_type_display(text.work_type),
-            'nw_name': text.nw_ID.nw_name,
-            'work_date': text.work_publication_date,
-        })
-
-    # Добавляем информацию из NWAArchiveCodes
-    for code in codes:
-        all_works.append({
-            'celebrant_name': code.blog_id.celebrant_name,
-            'birthday_date': code.blog_id.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Code', # или любое другое значение по умолчанию
-            'nw_name': code.nw_ID.nw_name,
-            'work_date': code.work_publication_date,
-        })
-
-    for blog in blogs:
-        all_works.append({
-            'celebrant_name': blog.celebrant_name,
-            'birthday_date': blog.birthday_date.strftime("%d.%m.%Y"),
-            'work_type': 'Blog',  # No type in model
-            'nw_name': blog.moderator_id.nw_ID.nw_name,
-            'work_date': None,
-        })
+    if selected_work_type_filter == 'congrats' or selected_work_type_filter == 'all':
+        for congrat in congrats_qs:
+            all_works_display_list.append({
+                'celebrant_name': congrat.blog_id.celebrant_name,
+                'birthday_date': congrat.blog_id.birthday_date.strftime("%d.%m.%Y"),
+                'work_type_display': "Поздравление",
+                'nw_name': congrat.nw_ID.nw_name,
+                'work_date': congrat.work_publication_date.strftime("%d.%m.%Y"),
+            })
+    
+    # Опционально: Сортировка списка all_works_display_list
+    # Например, по дате публикации (если она есть), затем по имени именинника
 
     context = {
-        'blogs': all_works,
-        'celebrant_name': celebrant_name,
+        'blogs': all_works_display_list,
+        'celebrant_name': celebrant_name_filter,
         'work_type_choices': get_work_type_choices(),
-        'selected_work_type': selected_work_type,
+        'selected_work_type': selected_work_type_filter,
     }
     return render(request, 'log.html', context)
-
-
-def get_work_type_choices():
-    """Hardcoded list of work types, replace if your source changes"""
-    return [
-        ('all', 'Все типы'),
-        ('0', 'Арт'),
-        ('1', 'Текст'),
-        ('2', 'Код'),
-    ]
-
-
-def get_work_type_display(work_type):
-    """Get display name for work type integer"""
-    work_type = str(work_type)
-    for value, display_name in get_work_type_choices():
-        if value == work_type:
-            return display_name
-    return "Unknown"
 
 def test_page_view(request):
     return render(request, 'test.html')
