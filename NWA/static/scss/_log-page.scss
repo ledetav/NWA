@@ -21,7 +21,6 @@
             display: grid;
             grid-template-columns: 1fr 2fr; 
             gap: 20px; 
-            align-items: end; 
 
             @media (max-width: 768px) { 
                 grid-template-columns: 1fr;
@@ -31,11 +30,11 @@
         .filter__item { 
             display: grid;
             grid-template-areas:
-                "label label"
-                "input button";
-            grid-template-columns: 1fr auto; 
+                "label"   // Лейбл занимает всю ширину строки
+                "input";  // Поле ввода занимает всю ширину строки под лейблом
+            grid-template-columns: 1fr; // Одна колонка
+            grid-template-rows: auto auto; // Высота строк по содержимому
             gap: 8px; 
-            align-items: end; 
         }
 
         .filter__label {
@@ -43,16 +42,16 @@
             font-weight: 500;
             color: darken($text-color, 5%);
         }
-
-        // Обертка для select, чтобы добавить кастомную стрелку
+        
         .filter__select-wrapper {
-            grid-area: input; // Обертка занимает место инпута в гриде
-            position: relative; // Для позиционирования псевдоэлемента-стрелки
+            grid-area: input;
+            position: relative; 
         }
 
         .filter__select,
         .filter__input {
-            // Общие стили для input и select
+            grid-area: input;
+
             padding: 10px 15px;
             border-radius: $border-radius-small;
             border: 1px solid transparent; 
@@ -72,65 +71,45 @@
             }
         }
         
-        // Специфичные стили для select
         .filter__select {
-            // Убираем стандартный внешний вид
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            
-            // Убираем стандартную стрелку (важно!)
             background-image: none; 
-            
-            padding-right: 40px; // Добавляем место справа для кастомной стрелки
-            cursor: pointer; // Показываем, что элемент кликабельный
+            padding-right: 40px; 
+            cursor: pointer;
 
-            // Стилизация опций (выпадающего списка)
             option {
-                background-color: lighten($bg-color, 3%); // Фон для каждой опции
-                color: $text-color;         // Цвет текста опций
-                padding: 8px 12px;          // Паддинги для опций (часто игнорируются)
-
-                &:hover { // Стиль при наведении на опцию (может не работать)
+                background-color: lighten($bg-color, 3%); 
+                color: $text-color;        
+                padding: 8px 12px;         
+                &:hover { 
                     background-color: darken($bg-color, 5%);
                 }
-                &:checked { // Стиль выбранной опции в списке (может не работать)
+                &:checked { 
                     background-color: $link-color;
-                    color: $light-shadow-color; // Белый текст на цветном фоне
+                    color: $light-shadow-color; 
                 }
             }
         }
 
-        // Кастомная стрелка для select (CSS-треугольник)
         .filter__select-wrapper::after {
-            content: ''; // Обязательно для псевдоэлементов
+            content: ''; 
             position: absolute;
             top: 50%;
-            right: 15px; // Отступ стрелки от правого края
-            transform: translateY(-50%); // Вертикальное центрирование
-            
+            right: 15px; 
+            transform: translateY(-50%); 
             width: 0; 
             height: 0; 
-            // Создаем треугольник, направленный вниз
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-top: 6px solid $text-color; // Это "острие" треугольника
-            
-            pointer-events: none; // Клик должен проходить на сам <select>
-            transition: border-color 0.2s ease-in-out; // Плавный переход цвета стрелки
+            border-top: 6px solid $text-color; 
+            pointer-events: none; 
+            transition: border-color 0.2s ease-in-out; 
         }
 
-        // Изменение цвета стрелки при фокусе на селекте внутри обертки
         .filter__select-wrapper:focus-within::after {
-            border-top-color: $link-color; // Цвет стрелки меняется на акцентный
-        }
-
-        .filter__button { 
-            grid-area: button; 
-            width: 44px;       
-            height: 44px;      
-            padding: 0;        
-            font-size: 1.1em;  
+            border-top-color: $link-color; 
         }
     }
 

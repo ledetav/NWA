@@ -6,27 +6,21 @@
 {% block page_content %}
 <div class="log-page">
     <div class="log-page__filter">
-        <form method="get" class="filter__form">
+        <form method="get" class="filter__form" id="filterForm">
             <div class="filter__item filter__item--type">
                 <label class="filter__label" for="type-work-select">Тип работы:</label>
                 <div class="filter__select-wrapper">
                     <select class="filter__select" id="type-work-select" name="type_work">
                         {% for value, display_name in work_type_choices %}
-                             <option value="{{ value }}" {% if value == selected_work_type %}selected{% endif %}>{{ display_name }}</option>
+                             <option value="{{ value }}" {% if value|stringformat:"s" == selected_work_type|stringformat:"s" %}selected{% endif %}>{{ display_name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                 <button type="submit" class="button button--neumorphic filter__button" title="Фильтровать по типу">
-                     <i class="fas fa-filter"></i>
-                 </button>
             </div>
 
             <div class="filter__item filter__item--search">
                 <label class="filter__label" for="celebrant-name-input">Имя именинника:</label>
                 <input type="text" class="filter__input" id="celebrant-name-input" name="celebrant_name" value="{{ celebrant_name|default:'' }}">
-                <button type="submit" class="button button--neumorphic filter__button" title="Найти по имени">
-                    <i class="fas fa-search"></i>
-                </button>
             </div>
         </form>
     </div>
@@ -51,9 +45,41 @@
                     <td>{{ row.nw_name }}</td>
                     <td>{{ row.work_date }}</td>
                 </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">По вашему запросу ничего не найдено.</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
 {% endblock page_content %}
+
+{% block scripts_block %}
+    {{ block.super }}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const typeWorkSelect = document.getElementById('type-work-select');
+        const celebrantNameInput = document.getElementById('celebrant-name-input');
+
+        let debounceTimer; // Для задержки отправки формы при вводе текста
+
+        if (typeWorkSelect && filterForm) {
+            typeWorkSelect.addEventListener('change', function () {
+                filterForm.submit(); // Отправляем форму при изменении select
+            });
+        }
+
+        if (celebrantNameInput && filterForm) {
+            celebrantNameInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function () {
+                    filterForm.submit(); // Отправляем форму через 500мс после прекращения ввода
+                }, 500); 
+            });
+        }
+    });
+    </script>
+{% endblock scripts_block %}
