@@ -34,11 +34,19 @@
                     <th>Тип работы</th>
                     <th>Даритель</th>
                     <th>Дата публикации</th>
+                    <th>Посмотреть информацию</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in blogs %}
-                <tr class="js-log-entry-row" 
+                <tr>
+                    <td>{{ row.celebrant_name }}</td>
+                    <td>{{ row.birthday_date }}</td>
+                    <td>{{ row.work_type_display }}</td>
+                    <td>{{ row.nw_name }}</td>
+                    <td>{{ row.work_date }}</td>
+                    <td>
+                        <button class="js-log-entry-row button button--neumorphic" 
                     data-celebrant-name="{{ row.celebrant_name }}"
                     data-birthday-date="{{ row.birthday_date }}" {# Дата ДР #}
                     data-work-type="{{ row.work_type_display }}"
@@ -46,11 +54,9 @@
                     data-publication-date="{{ row.work_date }}" {# Дата публикации работы #}
                     style="cursor: pointer;"
                     title="Нажмите для подробной информации">
-                    <td>{{ row.celebrant_name }}</td>
-                    <td>{{ row.birthday_date }}</td>
-                    <td>{{ row.work_type_display }}</td>
-                    <td>{{ row.nw_name }}</td>
-                    <td>{{ row.work_date }}</td>
+                           Информация
+                       </button>
+                    </td>
                 </tr>
                 {% empty %}
                 <tr>
