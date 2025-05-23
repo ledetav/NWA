@@ -16,8 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from NWA_archive import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("NWA_archive.urls")),
+    path('test/', views.test_page_view),
+    path('', views.main_page_view),
+    path('log/', views.log_page_view),
+    path('modal/', views.modal_window),
 ]

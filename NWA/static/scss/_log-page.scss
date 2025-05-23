@@ -1,0 +1,150 @@
+@use 'global_styles' as *;
+
+.log-page {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    &__filter {
+        padding: 20px;
+        border-radius: $border-radius-medium;
+        background-color: lighten($bg-color, 2%);
+        box-shadow: 0 2px 5px rgba($dark-shadow-color, 0.1);
+
+        .filter__title {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: darken($text-color, 10%);
+            margin-bottom: 15px;
+        }
+
+        .filter__form {
+            display: grid;
+            grid-template-columns: 1fr 2fr; 
+            gap: 20px; 
+
+            @media (max-width: 768px) { 
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .filter__item { 
+            display: grid;
+            grid-template-areas:
+                "label"   // Лейбл занимает всю ширину строки
+                "input";  // Поле ввода занимает всю ширину строки под лейблом
+            grid-template-columns: 1fr; // Одна колонка
+            grid-template-rows: auto auto; // Высота строк по содержимому
+            gap: 8px; 
+        }
+
+        .filter__label {
+            grid-area: label; 
+            font-weight: 500;
+            color: darken($text-color, 5%);
+        }
+        
+        .filter__select-wrapper {
+            grid-area: input;
+            position: relative; 
+        }
+
+        .filter__select,
+        .filter__input {
+            grid-area: input;
+
+            padding: 10px 15px;
+            border-radius: $border-radius-small;
+            border: 1px solid transparent; 
+            background-color: $bg-color;
+            color: $text-color;
+            width: 100%; 
+            font-size: 0.95em;
+            @include neumorphic-concave(4px, 8px, $border-radius-small);
+
+            &:focus {
+              outline: none;
+              border-color: $link-color; 
+              box-shadow:
+                inset 4px 4px 8px darken($dark-shadow-color, 5%),
+                inset -4px -4px 8px lighten($light-shadow-color, 3%),
+                0 0 0 2px rgba($link-color, 0.2);
+            }
+        }
+        
+        .filter__select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: none; 
+            padding-right: 40px; 
+            cursor: pointer;
+
+            option {
+                background-color: lighten($bg-color, 3%); 
+                color: $text-color;        
+                padding: 8px 12px;         
+                &:hover { 
+                    background-color: darken($bg-color, 5%);
+                }
+                &:checked { 
+                    background-color: $link-color;
+                    color: $light-shadow-color; 
+                }
+            }
+        }
+
+        .filter__select-wrapper::after {
+            content: ''; 
+            position: absolute;
+            top: 50%;
+            right: 15px; 
+            transform: translateY(-50%); 
+            width: 0; 
+            height: 0; 
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid $text-color; 
+            pointer-events: none; 
+            transition: border-color 0.2s ease-in-out; 
+        }
+
+        .filter__select-wrapper:focus-within::after {
+            border-top-color: $link-color; 
+        }
+    }
+
+    &__table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .data-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+        
+        th, td {
+            padding: 12px 15px;
+            word-wrap: break-word;
+            text-align: center;
+            border: 1px solid darken($bg-color, 12%);
+        }
+
+        th {
+            background-color: darken($bg-color, 6%);
+            font-weight: 600;
+            color: darken($text-color, 15%);
+        }
+
+        tbody tr {
+            &:nth-child(even) {
+                background-color: darken($bg-color, 2%);
+            }
+            &:hover {
+                background-color: darken($bg-color, 5%);
+            }
+        }
+    }
+}

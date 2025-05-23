@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ТЕСТ?? (БЭМ){% endblock %}
+
+{% block page_content %}
+    {# Блок 1 #}
+    <div class="content-card content-card--sponsor">
+        <div class="content-card__body">
+            <p class="content-card__text">Этот проект спонсирован господином Тартальей на здоровые нервы. Поблагодарим Предвестника Её Величества за службу!</p>
+            <button class="button button--neumorphic content-card__action js-open-modal-btn" type="button" title="Показать благодарность">
+                <img class="button__icon" src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+                     alt="Открыть модальное окно">
+            </button>
+        </div>
+    </div>
+
+    {# Блок 2 #}
+    <div class="content-card content-card--generosity">
+        <div class="content-card__body">
+            <p class="content-card__text">Безграничная щедрость господина Тартальи не знает границ!</p>
+            <img class="content-card__image" src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+                alt="Тарталья">
+        </div>
+    </div>
+
+    {# Блок 3 #}
+    <div class="content-card content-card--thanks">
+        <div class="content-card__body">
+            <p class="content-card__text">Ещё раз спасибо за всё, Предвестник!</p>
+            <img class="content-card__image" src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78"
+                alt="Тарталья">
+        </div>
+    </div>
+{% endblock page_content %}
+
+{% block modal_block %}
+{% endblock modal_block %}
+
+{% block scripts_block %}
+{% endblock scripts_block %}

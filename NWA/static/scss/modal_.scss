@@ -1,0 +1,113 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(black, 0.85);
+    display: none; // Управляется JS через класс modal--open-transition
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    padding: 20px; // Отступы для самого оверлея, чтобы окно не прилипало к краям
+    box-sizing: border-box;
+
+    // Состояние для начала transition
+    &--open-transition {
+      display: flex;
+    }
+    // Состояние видимости
+    &--visible {
+      opacity: 1;
+      .modal__window { // Анимация для окна при появлении модалки
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    &__window {
+        position: relative;
+        padding: 20px 20px;
+        width: 100%;
+        max-width: 180vh; // Ограничение ширины модального окна
+        min-height: 90vh; // Ограничение высоты, чтобы помещалось на экране
+        box-sizing: border-box;
+        transform: scale(0.95) translateY(-20px);
+        opacity: 0;
+        transition: transform 0.3s ease-out 0.1s, opacity 0.3s ease-out 0.1s;
+        overflow-y: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+
+        &--neumorphic {
+            @include neumorphic-convex(5px, 7px, $border-radius-small);
+        }
+    }
+
+    &__close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background: none;
+        border: none;
+        font-size: 32px; // Размер крестика
+        line-height: 1;
+        cursor: pointer;
+        color: $text-color;
+        @include neumorphic-convex(3px, 5px, 100%); // Маленькая круглая кнопка
+
+        &:hover {
+            color: $link-hover-color;
+            @include neumorphic-concave(2px, 4px, 50%);
+        }
+    }
+
+    &__title {
+        margin-top: 0;
+        color: darken($text-color, 15%);
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    &__body {
+      margin-bottom: 20px; // Отступ под текстовым блоком и картинкой
+      width: 100%; // Для корректного центрирования, если нужно
+    }
+
+    &__text {
+        margin-bottom: 15px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__image {
+        max-width: 100%; // Чтобы не вылезала за пределы окна
+        height: auto;
+        max-height: 250px; // Ограничение по высоте
+        border-radius: $border-radius-medium;
+        margin-top: 15px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    &__footer {
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba($dark-shadow-color, 0.2);
+    }
+
+    &__action-button {
+        margin: 5px;
+    }
+}

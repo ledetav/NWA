@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Лог Дарителей Тепла{% endblock %}
+
+{% block page_content %}
+<div class="log-page">
+    <div class="log-page__filter">
+        <form method="get" class="filter__form" id="filterForm">
+            <div class="filter__item filter__item--type">
+                <label class="filter__label" for="type-work-select">Тип работы:</label>
+                <div class="filter__select-wrapper">
+                    <select class="filter__select" id="type-work-select" name="type_work">
+                        {% for value, display_name in work_type_choices %}
+                             <option value="{{ value }}" {% if value|stringformat:"s" == selected_work_type|stringformat:"s" %}selected{% endif %}>{{ display_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter__item filter__item--search">
+                <label class="filter__label" for="celebrant-name-input">Имя именинника:</label>
+                <input type="text" class="filter__input" id="celebrant-name-input" name="celebrant_name" value="{{ celebrant_name|default:'' }}">
+            </div>
+        </form>
+    </div>
+
+    <div class="log-page__table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Именинник</th>
+                    <th>Дата ДР</th> {# Изменил для ясности, что это дата ДР именинника #}
+                    <th>Тип работы</th>
+                    <th>Даритель</th>
+                    <th>Дата публикации</th>
+                    <th>Посмотреть информацию</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in blogs %}
+                <tr>
+                    <td>{{ row.celebrant_name }}</td>
+                    <td>{{ row.birthday_date }}</td>
+                    <td>{{ row.work_type_display }}</td>
+                    <td>{{ row.nw_name }}</td>
+                    <td>{{ row.work_date }}</td>
+                    <td>
+                        <button class="js-log-entry-row button button--neumorphic" 
+                    data-celebrant-name="{{ row.celebrant_name }}"
+                    data-birthday-date="{{ row.birthday_date }}" {# Дата ДР #}
+                    data-work-type="{{ row.work_type_display }}"
+                    data-nw-name="{{ row.nw_name }}"
+                    data-publication-date="{{ row.work_date }}" {# Дата публикации работы #}
+                    style="cursor: pointer;"
+                    title="Нажмите для подробной информации">
+                           Информация
+                       </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">По вашему запросу ничего не найдено.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block scripts_block %}
+    {{ block.super }}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterForm = document.getElementById('filterForm');
+        const typeWorkSelect = document.getElementById('type-work-select');
+        const celebrantNameInput = document.getElementById('celebrant-name-input');
+
+        let debounceTimer;
+
+        if (typeWorkSelect && filterForm) {
+            typeWorkSelect.addEventListener('change', function () {
+                filterForm.submit();
+            });
+        }
+
+        if (celebrantNameInput && filterForm) {
+            celebrantNameInput.addEventListener('input', function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function () {
+                    filterForm.submit();
+                }, 500);
+            });
+        }
+
+        // --- Логика для модального окна лога ---
+        const logEntryRows = document.querySelectorAll('.js-log-entry-row');
+
+        function showLogEntryModal(rowData) {
+            // rowData будет объектом с данными из data-атрибутов строки
+            // ЗАГЛУШКА: Формируем тело модального окна
+            let bodyContent = `
+                <div style="text-align: left;">
+                    <p><strong>Именинник:</strong> ${rowData.celebrantName}</p>
+                    <p><strong>Дата дня рождения именинника:</strong> ${rowData.birthdayDate}</p>
+                    <hr style="margin: 15px 0;">
+                    <p><strong>Тип работы:</strong> ${rowData.workType}</p>
+                    <p><strong>Даритель (автор работы):</strong> ${rowData.nwName}</p>
+                    <p><strong>Дата публикации работы:</strong> ${rowData.publicationDate}</p>
+                    <hr style="margin: 15px 0;">
+                </div>
+            `;
+
+            window.showCustomModal({
+                title: `Детали работы для: ${rowData.celebrantName}`,
+                bodyHtml: bodyContent,
+                footerHtml: `<button class="button button--neumorphic modal__action-button js-modal-close" type="button">Закрыть</button>`
+            });
+        }
+
+        logEntryRows.forEach(row => {
+            row.addEventListener('click', function() {
+                const rowData = {
+                    celebrantName: this.dataset.celebrantName,
+                    birthdayDate: this.dataset.birthdayDate,
+                    workType: this.dataset.workType,
+                    nwName: this.dataset.nwName,
+                    publicationDate: this.dataset.publicationDate
+                };
+                showLogEntryModal(rowData);
+            });
+        });
+    });
+    </script>
+{% endblock scripts_block %}

@@ -1,0 +1,163 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="ru" class="page">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Архив Дарителей тепла{% endblock %}</title>
+    <link href="{% sass_src 'scss/global_styles.scss' %}" rel="stylesheet" type="text/css" />
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="page__body">
+    <div class="page__inner-wrapper">
+        <header class="header page__header">
+            <nav class="header__nav header__nav--neumorphic-bar">
+                <a href="/" class="header__nav-link header__nav-link--home-icon" title="На главную">
+                    <img src="https://s3.getstickerpack.com/storage/uploads/sticker-pack/genshin-impact-tartaglia/sticker_2.png?a3d01a4a5c5f97a1d0e72b110c5cfa78" alt="Главная" class="header__home-icon-img">
+                </a>
+                <ul class="header__nav-list">
+                    <li class="header__nav-item">
+                        <a href="/log" class="header__nav-link">Лог работ</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="main page__main">
+            <div class="main__window main__window--neumorphic">
+                {% block page_content %}
+                {% endblock page_content %}
+            </div>
+        </main>
+
+        <footer class="footer page__footer">
+            <p class="footer__text">©{% now "Y" %} Горемычный Смехотворец [1546471] и Пламенеющая [1615439]. Все права защищены.</p>
+        </footer>
+
+        <!-- Реиспользуемая структура модального окна -->
+        <div class="modal js-modal">
+            <div class="modal__window modal__window--neumorphic">
+                <button class="modal__close js-modal-close" type="button" title="Закрыть">
+                    <i class="fa-regular fa-xmark fa-xs"></i>
+                </button>
+                <h3 class="modal__title js-modal-title"><!-- Заголовок будет здесь --></h3>
+                <div class="modal__body js-modal-body">
+                    <!-- Контент тела будет здесь -->
+                </div>
+                <div class="modal__footer js-modal-footer">
+                    <!-- Кнопки футера будут здесь -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/fontawesome.js' %}"></script>
+    <!-- Глобальный JavaScript для модального окна -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalElement = document.querySelector('.js-modal');
+        const modalTitleElement = modalElement ? modalElement.querySelector('.js-modal-title') : null;
+        const modalBodyElement = modalElement ? modalElement.querySelector('.js-modal-body') : null;
+        const modalFooterElement = modalElement ? modalElement.querySelector('.js-modal-footer') : null;
+
+        // Кнопка "крестик" и другие стандартные кнопки закрытия из структуры модалки
+        const staticCloseButtons = modalElement ? modalElement.querySelectorAll('.js-modal-close') : [];
+
+        function openModalInternal() {
+            if (modalElement) {
+                modalElement.classList.add('modal--open-transition');
+                document.body.style.overflow = 'hidden';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        modalElement.classList.add('modal--visible');
+                    });
+                });
+            }
+        }
+
+        function closeModalInternal() {
+            if (modalElement) {
+                modalElement.classList.remove('modal--visible');
+                document.body.style.overflow = '';
+
+                const onTransitionEnd = (event) => {
+                    if (event.target === modalElement && event.propertyName === 'opacity') {
+                        modalElement.classList.remove('modal--open-transition');
+                        modalElement.removeEventListener('transitionend', onTransitionEnd);
+                    }
+                };
+                modalElement.addEventListener('transitionend', onTransitionEnd);
+
+                setTimeout(() => {
+                    if (!modalElement.classList.contains('modal--visible')) {
+                         modalElement.classList.remove('modal--open-transition');
+                         if (document.body.style.overflow === 'hidden') {
+                            document.body.style.overflow = '';
+                         }
+                    }
+                }, 400);
+            }
+        }
+
+        // Глобальная функция для отображения модального окна
+        window.showCustomModal = function(config) {
+            // config = { title: 'string', bodyHtml: 'string', footerHtml: 'string' (optional) }
+            if (!modalElement || !modalTitleElement || !modalBodyElement || !modalFooterElement) {
+                console.error('Modal elements not found in base.html. Cannot show modal.');
+                return;
+            }
+
+            modalTitleElement.innerHTML = config.title || 'Уведомление'; // Заголовок по умолчанию
+            modalBodyElement.innerHTML = config.bodyHtml || '<p>Нет данных для отображения.</p>'; // Тело по умолчанию
+
+            if (config.footerHtml) {
+                modalFooterElement.innerHTML = config.footerHtml;
+                modalFooterElement.style.display = ''; // Показываем футер
+                // Переназначаем обработчики для кнопок закрытия, если они есть в динамическом футере
+                modalFooterElement.querySelectorAll('.js-modal-close, .js-modal-close-alt').forEach(button => {
+                    // Удаляем старые обработчики, чтобы избежать дублирования
+                    const newButton = button.cloneNode(true);
+                    button.parentNode.replaceChild(newButton, button);
+                    newButton.addEventListener('click', closeModalInternal);
+                });
+            } else {
+                modalFooterElement.innerHTML = ''; // Очищаем футер
+                modalFooterElement.style.display = 'none'; // Скрываем футер
+            }
+            openModalInternal();
+        };
+
+        // Глобальная функция для закрытия модального окна
+        window.closeCustomModal = function() {
+            closeModalInternal();
+        };
+
+        // Обработчики для статических кнопок закрытия (например, крестик)
+        staticCloseButtons.forEach(button => {
+            button.addEventListener('click', closeModalInternal);
+        });
+
+        // Закрытие по клику на оверлей
+        if (modalElement) {
+            modalElement.addEventListener('click', function (event) {
+                if (event.target === modalElement) { // Клик был именно на оверлей, а не на его содержимое
+                    closeModalInternal();
+                }
+            });
+        } else {
+            console.warn('Модальное окно (class: js-modal) не найдено в base.html.');
+        }
+
+        // Закрытие по Esc
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape" && modalElement && modalElement.classList.contains('modal--visible')) {
+                closeModalInternal();
+            }
+        });
+    });
+    </script>
+    <!-- Конец глобального JavaScript для модального окна -->
+
+    {% block scripts_block %}{% endblock scripts_block %}
+</body>
+</html>

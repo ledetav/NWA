@@ -1,0 +1,383 @@
+@use 'global_styles' as *;
+
+.index-page {
+    &__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.5fr); 
+        grid-template-rows: auto auto;
+        gap: 25px;
+        grid-template-areas:
+            "birthdays   statistics"
+            "calendar    moderators";
+
+        @media (max-width: 991px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto auto;
+            grid-template-areas:
+                "birthdays"
+                "calendar"
+                "statistics"
+                "moderators";
+        }
+    }
+
+    &__section {
+        padding: 20px;
+        border-radius: $border-radius-medium;
+        background-color: lighten($bg-color, 2%);
+        box-shadow: 0 2px 5px rgba($dark-shadow-color, 0.1);
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        &--upcoming-birthdays { grid-area: birthdays; }
+        &--statistics { 
+            grid-area: statistics;
+            text-align: center; 
+        }
+        &--calendar { 
+            grid-area: calendar;
+             // Убедимся, что календарь растягивается по высоте, если нужно
+            display: flex; // Чтобы .calendar внутри мог расти
+            flex-direction: column;
+        }
+        &--moderators { grid-area: moderators; }
+    }
+
+    &__section-title {
+        text-align: center;
+        font-size: 1.2em; 
+        font-weight: 600;
+        color: darken($text-color, 15%);
+        margin-bottom: 15px;
+        border-bottom: 1px solid darken($bg-color, 10%);
+        padding-bottom: 10px;
+    }
+
+    // --- Ближайшие именинники (стилизация под круги) ---
+    .upcoming-birthdays {
+        &__list {
+            display: grid;
+            // Адаптивное количество колонок для именинников
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+        &__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        &__date {
+            font-size: 0.9em;
+            color: lighten($text-color, 10%);
+            background-color: darken($bg-color, 5%);
+            padding: 2px 6px;
+            border-radius: $border-radius-small;
+        }
+        &__avatar { // "Круг" с котиком или другим аватаром
+            width: 90px;  // Размер круга
+            height: 90px;
+            background-color: $dark-shadow-color; // Цвет фона аватара
+            border-radius: 50%; // Делаем круглым
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            // Если будете использовать <img> внутри:
+            // img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+            // Пока просто иконка или текст:
+            font-size: 2.5em; // Размер для иконки-плейсхолдера
+            color: $bg-color;
+            overflow: hidden; // Если картинка будет больше
+        }
+        &__name {
+            font-weight: 500;
+        }
+    }
+
+    // --- Статистика (стилизация под макет) ---
+    .statistics-details { // Новый контейнер для элементов статистики
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+
+        &__total-blogs {
+            font-size: 3.5em; // Большой размер для числа блогов
+            font-weight: bold;
+            color: $link-color; // Или другой акцентный цвет
+            line-height: 1;
+        }
+        &__total-blogs-label {
+            font-size: 1.1em;
+            color: darken($text-color, 10%);
+            margin-top: -10px; // Чтобы подпись была ближе к числу
+            margin-bottom: 10px;
+        }
+        &__breakdown-title {
+            font-size: 0.9em;
+            color: lighten($text-color, 5%);
+            font-weight: 500;
+        }
+        &__breakdown-item {
+            font-size: 1.2em; // Размер для строк "568 рисунков"
+            color: $text-color;
+            span { // Число внутри элемента
+                font-weight: 600;
+            }
+        }
+    }
+
+    .calendar { // Основной контейнер календаря
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex-grow: 1; // Позволяет календарю занять доступное пространство в секции
+
+        &__header { // Заголовок календаря (Месяц Год и кнопки)
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0; // Отступы сверху/снизу
+            margin-bottom: 10px; // Отступ от дней недели
+
+            button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 1.8em; // Размер стрелок
+                color: $text-color;
+                padding: 5px 10px;
+                border-radius: $border-radius-small;
+                line-height: 1; // Для лучшего вертикального выравнивания
+                &:hover {
+                    color: $link-color;
+                    background-color: darken($bg-color, 5%);
+                }
+            }
+            h3 { // Отображение месяца и года (или h2)
+                font-size: 1.3em;
+                margin: 0;
+                font-weight: 500;
+                text-align: center;
+                flex-grow: 1; // Позволяет тексту занять доступное пространство между кнопками
+            }
+        }
+
+        &__weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            padding-bottom: 8px;
+            border-bottom: 1px solid darken($bg-color, 10%);
+            div {
+                padding: 5px;
+            }
+        }
+
+        &__days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: minmax(50px, auto); // Авто высота строк, минимум 50px
+            grid-gap: 4px; // Промежуток между днями
+            padding-top: 10px;
+            flex-grow: 1; // Позволяет блоку дней растягиваться
+            div {
+                text-align: center;
+                padding: 8px 5px; // Паддинги внутри ячейки дня
+                cursor: pointer;
+                border: 1px solid transparent;
+                border-radius: $border-radius-small;
+                min-height: 40px; // Минимальная высота ячейки дня (можно удалить, если grid-auto-rows достаточно)
+                display: flex;
+                flex-direction: column; // Для точки внизу
+                align-items: center;
+                justify-content: center; // Центрируем число дня
+                position: relative;
+
+                &:hover {
+                    background-color: darken($bg-color, 5%);
+                    border-color: darken($bg-color, 15%);
+                }
+                &.has-birthday {
+                    font-weight: bold;
+                    // Можно оставить точку или сделать другой индикатор
+                    &::after { 
+                        content: '';
+                        display: block;
+                        width: 6px;
+                        height: 6px;
+                        background-color: #e74c3c; 
+                        border-radius: 50%;
+                        position: absolute;
+                        bottom: 6px; 
+                        left: 50%;
+                        transform: translateX(-50%);
+                    }
+                }
+                &.today {
+                    background-color: lighten($link-hover-color, 40%);
+                    border: 1px solid $link-hover-color;
+                    font-weight: bold;
+                }
+                &.empty {
+                    background-color: transparent;
+                    cursor: default;
+                    &:hover {
+                        background-color: transparent;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+
+    // --- Ответственные ---
+    .moderators-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center; // Центрируем карточку модератора
+    }
+
+    .moderator-item {
+        padding: 20px;
+        background-color: $bg-color;
+        border-radius: $border-radius-medium; // Более скругленные углы
+        border: 1px solid darken($bg-color, 7%);
+        text-align: center;
+        max-width: 400px; // Ограничим ширину карточки
+        width: 100%;
+        box-shadow: 0 3px 7px rgba($dark-shadow-color, 0.15);
+
+        &__avatar { // Для аватара модератора
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: $dark-shadow-color; // Placeholder
+            margin: 0 auto 15px auto;
+            // Если <img>: img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em; color: $bg-color; // Для иконки-плейсхолдера
+            overflow: hidden;
+        }
+
+        &__name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        &__role {
+            font-style: italic;
+            margin-bottom: 15px;
+            color: darken($text-color, 5%);
+            font-size: 0.95em;
+        }
+        &__links {
+            display: flex;
+            justify-content: center;
+            gap: 15px; // Промежуток между кнопками
+            a { // Стилизуем ссылки как кнопки
+                color: $link-color;
+                text-decoration: none;
+                font-weight: 500;
+                padding: 8px 15px;
+                border-radius: $border-radius-small;
+                background-color: darken($bg-color, 5%);
+                border: 1px solid darken($bg-color, 10%);
+                transition: all 0.2s ease;
+                &:hover {
+                    background-color: darken($bg-color, 10%);
+                    border-color: darken($bg-color, 20%);
+                    color: $link-hover-color;
+                }
+            }
+        }
+    }
+
+    .moderators-carousel-wrapper { // Обертка для карусели и точек
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .moderators-carousel { // Сам блок карусели
+            position: relative;
+            width: 100%;
+            max-width: 400px; // Максимальная ширина карусели
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px; // Отступ между каруселью и точками
+
+            &__viewport {
+                width: 100%;
+                overflow: hidden;
+                margin: 0 15px; 
+            }
+
+            &__track {
+                display: flex;
+                transition: transform 0.4s ease-in-out;
+            }
+
+            &__btn {
+                background-color: darken($bg-color, 5%);
+                border: 1px solid darken($bg-color, 10%);
+                color: $text-color;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                font-size: 1.4em;
+                line-height: 1;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.2s ease, opacity 0.2s ease;
+                flex-shrink: 0;
+
+                &:hover:not(:disabled) {
+                    background-color: darken($bg-color, 10%);
+                }
+
+                &:disabled {
+                    opacity: 0.4;
+                    cursor: not-allowed;
+                }
+            }
+            
+            // Стили для .moderator-item, когда он является слайдом внутри карусели
+            .moderator-item { 
+                flex: 0 0 100%; // Каждый слайд занимает 100% ширины ВЬЮПОРТА
+                box-sizing: border-box;
+                margin: 0; // Убираем внешние отступы у слайда, т.к. он внутри трека
+            }
+        }
+
+        // Стили для контейнера точек
+        .moderators-carousel__dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 0; // Небольшой отступ для области точек
+    
+            .moderators-carousel__dot { // Стили для отдельной точки
+                background-color: darken($bg-color, 15%);
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                margin: 0 5px; // Промежуток между точками
+                transition: background-color 0.3s ease, transform 0.2s ease;
+    
+                &--active {
+                    background-color: $link-color; 
+                    transform: scale(1.2); // Небольшое увеличение для активной точки
+                }
+            }
+        }
+    }
+}
