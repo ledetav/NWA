@@ -47,8 +47,9 @@ STATICFILES_FINDERS = [
     'sass_processor.finders.CssFinder',
 ]
 
-SASS_PROCESSOR_OUTPUT_DIR = 'css/compiled'
 SASS_PROCESSOR_ENABLED = DEBUG
+SASS_PROCESSOR_ROOT = BASE_DIR / 'static'
+SASS_PROCESSOR_OUTPUT_DIR = 'css/compiled'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
